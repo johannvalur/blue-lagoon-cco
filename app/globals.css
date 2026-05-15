@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Blue Lagoon brand — primary
+     Values aligned with the real bluelagoon.com tokens (midnight #001a70,
+     deep #00134d, bright accent #06f, aurora mint #a2f1ba). */
+  --color-bluelagoon-midnight: #001a70;
+  --color-bluelagoon-deep: #00134d;
+  --color-bluelagoon-bright: #0066ff;
+  --color-bluelagoon-snow: #fbfbfb;
+  --color-bluelagoon-basalt: #303030;
+
+  /* Light-theme surface tokens — matched to the real site's neutral grays */
+  --color-bluelagoon-paper: #ffffff;
+  --color-bluelagoon-mist: #f1f3f7;
+  --color-bluelagoon-cloud: #f6f8fc;
+  --color-bluelagoon-line: #e6e9ee;
+  --color-bluelagoon-ink: #1d222a;
+  --color-bluelagoon-muted: #5b6478;
+  --color-bluelagoon-midnight-soft: #00134d;
+
+  /* Blue Lagoon brand — secondary palette */
+  --color-bluelagoon-aurora: #a2f1ba;
+  --color-bluelagoon-fiery: #ff47b3;
+  --color-bluelagoon-crisp: #54c0e8;
+  --color-bluelagoon-boreal: #91f5e1;
+  --color-bluelagoon-volcanic: #50e68c;
+  --color-bluelagoon-golden: #ffda00;
+  --color-bluelagoon-lilac: #be00ff;
+
+  --font-loft: "Manrope", "Inter", system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-bluelagoon-snow);
+  color: var(--color-bluelagoon-ink);
+  color-scheme: light;
+  font-family: var(--font-loft);
+  font-feature-settings: "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--color-bluelagoon-snow);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.font-loft {
+  font-family: var(--font-loft);
+  letter-spacing: -0.014em;
+}
+
+/* Subtle elevations consistent with airline-website chrome */
+.surface-card {
+  background: var(--color-bluelagoon-paper);
+  border: 1px solid var(--color-bluelagoon-line);
+  box-shadow: 0 1px 2px rgba(0, 26, 112, 0.04);
+}
+
+.surface-card-hover {
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.surface-card-hover:hover {
+  border-color: rgba(0, 26, 112, 0.2);
+  box-shadow: 0 14px 36px -16px rgba(0, 26, 112, 0.18);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--color-bluelagoon-midnight);
+  color: var(--color-bluelagoon-snow);
+  border-radius: 9999px;
+  padding-inline: 1.25rem;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 19, 77, 0.1);
+}
+.btn-primary:hover {
+  background: var(--color-bluelagoon-deep);
+  box-shadow: 0 6px 16px -8px rgba(0, 19, 77, 0.45);
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-bright {
+  background: var(--color-bluelagoon-bright);
+  color: var(--color-bluelagoon-snow);
+  border-radius: 9999px;
+  transition: background 0.15s ease;
+}
+.btn-bright:hover {
+  background: var(--color-bluelagoon-midnight);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-bluelagoon-midnight);
+  border: 1px solid var(--color-bluelagoon-line);
+  border-radius: 9999px;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+.btn-secondary:hover {
+  border-color: var(--color-bluelagoon-midnight);
+  background: var(--color-bluelagoon-mist);
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
+@keyframes menu-pop {
+  0% { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.menu-pop {
+  animation: menu-pop 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top right;
+}
+
+@keyframes surface-fade {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.surface-fade {
+  animation: surface-fade 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes message-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.message-in {
+  animation: message-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes caption-swap {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.caption-swap {
+  animation: caption-swap 220ms ease-out both;
+}
+
+/* Scrollbar polish */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bluelagoon-line) transparent;
+}
+
+/* Accessibility menu toggles — applied on <html> by AccessibilityMenu */
+html.a11y-large-text {
+  font-size: 112.5%;
+}
+html.a11y-high-contrast {
+  --color-bluelagoon-ink: #000000;
+  --color-bluelagoon-muted: #2a2f3a;
+  --color-bluelagoon-line: #4a5260;
+}
+html.a11y-reduce-motion *,
+html.a11y-reduce-motion *::before,
+html.a11y-reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+html.a11y-underline-links a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Markdown prose tweaks for /concept */
+.prose-bluelagoon {
+  --tw-prose-body: var(--color-bluelagoon-ink);
+  --tw-prose-headings: var(--color-bluelagoon-midnight);
+  --tw-prose-bold: var(--color-bluelagoon-midnight);
+  --tw-prose-links: var(--color-bluelagoon-midnight);
+  --tw-prose-quotes: var(--color-bluelagoon-muted);
+  --tw-prose-quote-borders: var(--color-bluelagoon-aurora);
+  --tw-prose-code: var(--color-bluelagoon-midnight);
+  --tw-prose-hr: var(--color-bluelagoon-line);
+  --tw-prose-bullets: var(--color-bluelagoon-muted);
+  --tw-prose-th-borders: var(--color-bluelagoon-line);
+  --tw-prose-td-borders: var(--color-bluelagoon-line);
+}

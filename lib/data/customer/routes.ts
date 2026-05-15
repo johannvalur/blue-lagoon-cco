@@ -1,0 +1,180 @@
+export interface Route {
+  destination: string;
+  iata: string;
+  country: string;
+  region: "europe" | "north-america" | "iceland";
+  flightTimeHrs: number;
+  vibe: string[];
+  bestMonths: string[];
+  fromKEFFareEUR: { economy: number; saga: number };
+}
+
+export const NETWORK: Route[] = [
+  {
+    destination: "Reykjavík",
+    iata: "KEF",
+    country: "Iceland",
+    region: "iceland",
+    flightTimeHrs: 0,
+    vibe: ["nature", "geothermal", "northern-lights", "design"],
+    bestMonths: ["sep", "oct", "nov", "dec", "jan", "feb", "mar"],
+    fromKEFFareEUR: { economy: 0, saga: 0 },
+  },
+  {
+    destination: "Akureyri",
+    iata: "AEY",
+    country: "Iceland",
+    region: "iceland",
+    flightTimeHrs: 0.75,
+    vibe: ["nature", "ski", "fjords", "quiet"],
+    bestMonths: ["jan", "feb", "mar", "jun", "jul", "aug"],
+    fromKEFFareEUR: { economy: 79, saga: 199 },
+  },
+  {
+    destination: "Copenhagen",
+    iata: "CPH",
+    country: "Denmark",
+    region: "europe",
+    flightTimeHrs: 3.5,
+    vibe: ["design", "food", "cycling", "city"],
+    bestMonths: ["may", "jun", "jul", "aug", "sep"],
+    fromKEFFareEUR: { economy: 159, saga: 399 },
+  },
+  {
+    destination: "London",
+    iata: "LHR",
+    country: "United Kingdom",
+    region: "europe",
+    flightTimeHrs: 3.0,
+    vibe: ["city", "theatre", "museums", "food"],
+    bestMonths: ["apr", "may", "jun", "sep", "oct"],
+    fromKEFFareEUR: { economy: 149, saga: 379 },
+  },
+  {
+    destination: "Paris",
+    iata: "CDG",
+    country: "France",
+    region: "europe",
+    flightTimeHrs: 3.5,
+    vibe: ["city", "art", "food", "romance"],
+    bestMonths: ["apr", "may", "jun", "sep", "oct"],
+    fromKEFFareEUR: { economy: 169, saga: 419 },
+  },
+  {
+    destination: "Madrid",
+    iata: "MAD",
+    country: "Spain",
+    region: "europe",
+    flightTimeHrs: 4.5,
+    vibe: ["warm", "city", "food", "nightlife", "art"],
+    bestMonths: ["mar", "apr", "may", "sep", "oct"],
+    fromKEFFareEUR: { economy: 199, saga: 489 },
+  },
+  {
+    destination: "Barcelona",
+    iata: "BCN",
+    country: "Spain",
+    region: "europe",
+    flightTimeHrs: 4.5,
+    vibe: ["warm", "beach", "city", "architecture", "food"],
+    bestMonths: ["mar", "apr", "may", "sep", "oct"],
+    fromKEFFareEUR: { economy: 209, saga: 499 },
+  },
+  {
+    destination: "Lisbon",
+    iata: "LIS",
+    country: "Portugal",
+    region: "europe",
+    flightTimeHrs: 4.5,
+    vibe: ["warm", "coastal", "food", "surf", "design"],
+    bestMonths: ["feb", "mar", "apr", "may", "sep", "oct"],
+    fromKEFFareEUR: { economy: 219, saga: 519 },
+  },
+  {
+    destination: "Tenerife",
+    iata: "TFS",
+    country: "Spain",
+    region: "europe",
+    flightTimeHrs: 5.5,
+    vibe: ["warm", "beach", "hiking", "winter-sun", "volcanic"],
+    bestMonths: ["nov", "dec", "jan", "feb", "mar", "apr"],
+    fromKEFFareEUR: { economy: 249, saga: 579 },
+  },
+  {
+    destination: "Berlin",
+    iata: "BER",
+    country: "Germany",
+    region: "europe",
+    flightTimeHrs: 3.75,
+    vibe: ["city", "music", "art", "history", "nightlife"],
+    bestMonths: ["may", "jun", "jul", "aug", "sep"],
+    fromKEFFareEUR: { economy: 169, saga: 419 },
+  },
+  {
+    destination: "Amsterdam",
+    iata: "AMS",
+    country: "Netherlands",
+    region: "europe",
+    flightTimeHrs: 3.5,
+    vibe: ["city", "cycling", "design", "museums"],
+    bestMonths: ["apr", "may", "jun", "sep"],
+    fromKEFFareEUR: { economy: 159, saga: 399 },
+  },
+  {
+    destination: "New York",
+    iata: "JFK",
+    country: "United States",
+    region: "north-america",
+    flightTimeHrs: 5.75,
+    vibe: ["city", "food", "shopping", "theatre"],
+    bestMonths: ["apr", "may", "jun", "sep", "oct"],
+    fromKEFFareEUR: { economy: 359, saga: 899 },
+  },
+  {
+    destination: "Boston",
+    iata: "BOS",
+    country: "United States",
+    region: "north-america",
+    flightTimeHrs: 5.5,
+    vibe: ["city", "history", "academic", "coastal"],
+    bestMonths: ["may", "jun", "sep", "oct"],
+    fromKEFFareEUR: { economy: 339, saga: 849 },
+  },
+  {
+    destination: "Toronto",
+    iata: "YYZ",
+    country: "Canada",
+    region: "north-america",
+    flightTimeHrs: 6.0,
+    vibe: ["city", "diverse", "food", "outdoorsy"],
+    bestMonths: ["may", "jun", "sep", "oct"],
+    fromKEFFareEUR: { economy: 359, saga: 899 },
+  },
+  {
+    destination: "Seattle",
+    iata: "SEA",
+    country: "United States",
+    region: "north-america",
+    flightTimeHrs: 8.5,
+    vibe: ["nature", "coffee", "outdoorsy", "tech"],
+    bestMonths: ["jun", "jul", "aug", "sep"],
+    fromKEFFareEUR: { economy: 459, saga: 1099 },
+  },
+  {
+    destination: "Denver",
+    iata: "DEN",
+    country: "United States",
+    region: "north-america",
+    flightTimeHrs: 8.0,
+    vibe: ["nature", "ski", "mountains", "outdoorsy"],
+    bestMonths: ["dec", "jan", "feb", "mar", "jun", "jul", "aug"],
+    fromKEFFareEUR: { economy: 449, saga: 1079 },
+  },
+];
+
+export function networkSummary(): string {
+  return NETWORK.map(
+    (r) =>
+      `- ${r.destination} (${r.iata}, ${r.country}) — ${r.flightTimeHrs}h from KEF, vibe: ${r.vibe.join(", ")}, best months: ${r.bestMonths.join(", ")}, from €${r.fromKEFFareEUR.economy} economy / €${r.fromKEFFareEUR.saga} Saga.`,
+  ).join("\n");
+}
