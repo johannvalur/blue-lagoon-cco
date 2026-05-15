@@ -2,27 +2,28 @@ import { IntentSearch } from "./IntentSearch";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-bluelagoon-line bg-bluelagoon-paper">
-      {/* subtle aurora-tinted top band — keeps it light and airline-magazine */}
+    <section className="relative overflow-hidden border border-bluelagoon-line bg-bluelagoon-paper">
+      {/* soft lagoon-water wash at the top — mirrors the spa brand's
+          atmospheric photography palette */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-bluelagoon-crisp/15 via-bluelagoon-boreal/5 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-bluelagoon-water-300 via-bluelagoon-water-200 to-transparent"
       />
-      <div className="relative grid gap-10 px-8 py-14 md:grid-cols-5 md:px-14 md:py-20">
+      <div className="relative grid gap-12 px-8 py-16 md:grid-cols-5 md:px-16 md:py-24">
         <div className="md:col-span-3">
-          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-bluelagoon-line bg-bluelagoon-cloud px-3 py-1 text-xs font-semibold uppercase tracking-widest text-bluelagoon-midnight">
-            <span className="h-1.5 w-1.5 rounded-full bg-bluelagoon-crisp pulse-soft" />
+          <p className="font-accent mb-6 inline-flex items-center gap-2 border border-bluelagoon-blue-200 bg-bluelagoon-paper px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-bluelagoon-blue-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-bluelagoon-moss-600 pulse-soft" />
             AI-first concept · prototype
           </p>
-          <h1 className="font-loft text-5xl font-extrabold leading-[1.05] tracking-tight text-bluelagoon-midnight md:text-6xl">
+          <h1 className="heading-display text-5xl text-bluelagoon-blue-500 md:text-7xl">
             Flights to Europe, Iceland and North&nbsp;America
             <span className="text-bluelagoon-muted">,</span>
             <br />
-            <span className="text-bluelagoon-ink/80">
+            <span className="text-bluelagoon-blue-400">
               booked the way you actually plan a trip.
             </span>
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-bluelagoon-ink/85 md:text-lg">
+          <p className="mt-8 max-w-xl text-base font-light leading-relaxed text-bluelagoon-ink md:text-lg">
             We&rsquo;ve already got the structural advantage — the North
             Atlantic hub, the brand, a small enough footprint to actually
             rebuild around AI. This is what that could look like, end to end.
@@ -33,35 +34,38 @@ export function Hero() {
         </div>
       </div>
 
-      {/* trust strip, mimics the airline-website pattern under the search */}
-      <div className="relative grid grid-cols-2 gap-4 border-t border-bluelagoon-line bg-bluelagoon-cloud px-8 py-5 text-sm text-bluelagoon-ink/80 md:grid-cols-4 md:px-14">
+      {/* trust strip — sits on a faint water tint with the brand's signature
+          generous spacing */}
+      <div className="font-accent relative grid grid-cols-2 gap-6 border-t border-bluelagoon-line bg-bluelagoon-water-200 px-8 py-7 text-sm text-bluelagoon-ink md:grid-cols-4 md:px-16">
         <div>
-          <span className="font-semibold text-bluelagoon-midnight">
+          <span className="block font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
             North Atlantic stopover
           </span>
-          <span className="block text-xs text-bluelagoon-muted">
+          <span className="mt-1 block text-xs text-bluelagoon-muted">
             Hub-as-superpower
           </span>
         </div>
         <div>
-          <span className="font-semibold text-bluelagoon-midnight">Saga Club</span>
-          <span className="block text-xs text-bluelagoon-muted">
+          <span className="block font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
+            Saga Club
+          </span>
+          <span className="mt-1 block text-xs text-bluelagoon-muted">
             Loyalty, redesigned
           </span>
         </div>
         <div>
-          <span className="font-semibold text-bluelagoon-midnight">
+          <span className="block font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
             Ops + AI
           </span>
-          <span className="block text-xs text-bluelagoon-muted">
+          <span className="mt-1 block text-xs text-bluelagoon-muted">
             Humans approve. AI proposes.
           </span>
         </div>
         <div>
-          <span className="font-semibold text-bluelagoon-midnight">
+          <span className="block font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
             AI-native
           </span>
-          <span className="block text-xs text-bluelagoon-muted">
+          <span className="mt-1 block text-xs text-bluelagoon-muted">
             Real-time generation
           </span>
         </div>

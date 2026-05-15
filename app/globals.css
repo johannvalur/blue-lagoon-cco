@@ -2,48 +2,90 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Blue Lagoon brand — primary
-     Values aligned with the real bluelagoon.com tokens (midnight #001a70,
-     deep #00134d, bright accent #06f, aurora mint #a2f1ba). */
-  --color-bluelagoon-midnight: #001a70;
-  --color-bluelagoon-deep: #00134d;
-  --color-bluelagoon-bright: #0066ff;
-  --color-bluelagoon-snow: #fbfbfb;
-  --color-bluelagoon-basalt: #303030;
+  /* Blue Lagoon brand — sourced from blaalonidhf.is design tokens.
+     The spa palette is built around three families:
+       · Slate-navy "brand-blue" for ink, CTAs and chrome
+       · Soft "light-blue" for the iconic lagoon-water surface tints
+       · Mossy "green" for the wellness accent and secondary CTAs
+     Border-radius is zero across the brand — sharp corners are an identity
+     marker, not an accident. */
 
-  /* Light-theme surface tokens — matched to the real site's neutral grays */
+  /* Slate-navy / brand-blue scale (100 → 800) */
+  --color-bluelagoon-blue-100: #e9edef;
+  --color-bluelagoon-blue-200: #c9ced3;
+  --color-bluelagoon-blue-300: #949ca6;
+  --color-bluelagoon-blue-400: #5f6b7a;
+  --color-bluelagoon-blue-500: #293a4e;
+  --color-bluelagoon-blue-600: #1f2c3b;
+  --color-bluelagoon-blue-700: #151d27;
+  --color-bluelagoon-blue-800: #0a0f14;
+
+  /* Light-blue / lagoon-water scale */
+  --color-bluelagoon-water-100: #f8fbfd;
+  --color-bluelagoon-water-200: #eef4f9;
+  --color-bluelagoon-water-300: #dde9f4;
+  --color-bluelagoon-water-400: #cddeef;
+  --color-bluelagoon-water-500: #bcd3e9;
+  --color-bluelagoon-water-600: #8d9eaf;
+  --color-bluelagoon-water-700: #5e6a75;
+  --color-bluelagoon-water-800: #2f353a;
+
+  /* Mossy-green scale (accents, secondary CTAs) */
+  --color-bluelagoon-moss-100: #f2f3f1;
+  --color-bluelagoon-moss-200: #dfe1dc;
+  --color-bluelagoon-moss-300: #bec4b9;
+  --color-bluelagoon-moss-400: #9ea796;
+  --color-bluelagoon-moss-500: #7e8973;
+  --color-bluelagoon-moss-600: #5f6756;
+  --color-bluelagoon-moss-700: #3f453a;
+  --color-bluelagoon-moss-800: #20221d;
+
+  /* Legacy semantic tokens — remapped so existing components inherit the
+     new palette without sweeping every className. Keep names stable. */
+  --color-bluelagoon-midnight: var(--color-bluelagoon-blue-500);
+  --color-bluelagoon-deep: var(--color-bluelagoon-blue-700);
+  --color-bluelagoon-bright: var(--color-bluelagoon-moss-600);
+  --color-bluelagoon-snow: var(--color-bluelagoon-water-100);
+  --color-bluelagoon-basalt: var(--color-bluelagoon-blue-700);
   --color-bluelagoon-paper: #ffffff;
-  --color-bluelagoon-mist: #f1f3f7;
-  --color-bluelagoon-cloud: #f6f8fc;
-  --color-bluelagoon-line: #e6e9ee;
-  --color-bluelagoon-ink: #1d222a;
-  --color-bluelagoon-muted: #5b6478;
-  --color-bluelagoon-midnight-soft: #00134d;
+  --color-bluelagoon-mist: var(--color-bluelagoon-water-200);
+  --color-bluelagoon-cloud: var(--color-bluelagoon-water-300);
+  --color-bluelagoon-line: var(--color-bluelagoon-blue-100);
+  --color-bluelagoon-ink: var(--color-bluelagoon-blue-800);
+  --color-bluelagoon-muted: var(--color-bluelagoon-blue-400);
+  --color-bluelagoon-midnight-soft: var(--color-bluelagoon-blue-600);
 
-  /* Blue Lagoon brand — secondary palette */
-  --color-bluelagoon-aurora: #a2f1ba;
-  --color-bluelagoon-fiery: #ff47b3;
-  --color-bluelagoon-crisp: #54c0e8;
-  --color-bluelagoon-boreal: #91f5e1;
-  --color-bluelagoon-volcanic: #50e68c;
-  --color-bluelagoon-golden: #ffda00;
-  --color-bluelagoon-lilac: #be00ff;
+  /* Accent palette — secondary brand colors retain their slot names but
+     point at spa-palette equivalents. */
+  --color-bluelagoon-aurora: var(--color-bluelagoon-moss-300);
+  --color-bluelagoon-fiery: var(--color-bluelagoon-moss-600);
+  --color-bluelagoon-crisp: var(--color-bluelagoon-water-500);
+  --color-bluelagoon-boreal: var(--color-bluelagoon-water-400);
+  --color-bluelagoon-volcanic: var(--color-bluelagoon-moss-500);
+  --color-bluelagoon-golden: var(--color-bluelagoon-moss-400);
+  --color-bluelagoon-lilac: var(--color-bluelagoon-water-700);
 
-  --font-loft: "Manrope", "Inter", system-ui, sans-serif;
+  /* Typography — Manrope at thin weights mirrors Haborosoft's character on
+     the live site; Nunito Sans drives accents/buttons exactly as Webflow
+     ships them. */
+  --font-loft: "Manrope", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-accent: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 html {
-  background: var(--color-bluelagoon-snow);
+  background: var(--color-bluelagoon-paper);
   color: var(--color-bluelagoon-ink);
   color-scheme: light;
   font-family: var(--font-loft);
+  font-weight: 300;
   font-feature-settings: "ss01";
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--color-bluelagoon-snow);
+  background: var(--color-bluelagoon-paper);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -51,70 +93,92 @@ body {
 
 .font-loft {
   font-family: var(--font-loft);
-  letter-spacing: -0.014em;
+  letter-spacing: 0;
 }
 
-/* Subtle elevations consistent with airline-website chrome */
+.font-accent {
+  font-family: var(--font-accent);
+  letter-spacing: 0.02em;
+}
+
+/* Display headings — thin weight, generous tracking. Mirrors the
+   "headings light" treatment on blaalonidhf.is. */
+.heading-display {
+  font-family: var(--font-loft);
+  font-weight: 200;
+  letter-spacing: -0.01em;
+  line-height: 1.04;
+}
+
+/* Surface cards on the spa brand are nearly flush — soft border, no
+   shadow, sharp corners. Hover lifts subtly via border darkening only. */
 .surface-card {
   background: var(--color-bluelagoon-paper);
   border: 1px solid var(--color-bluelagoon-line);
-  box-shadow: 0 1px 2px rgba(0, 26, 112, 0.04);
+  border-radius: 0;
 }
 
 .surface-card-hover {
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 .surface-card-hover:hover {
-  border-color: rgba(0, 26, 112, 0.2);
-  box-shadow: 0 14px 36px -16px rgba(0, 26, 112, 0.18);
-  transform: translateY(-1px);
+  border-color: var(--color-bluelagoon-blue-300);
+  background-color: var(--color-bluelagoon-water-100);
 }
 
+/* Primary CTA — slate-navy, sharp corners, accent-cased label. */
 .btn-primary {
-  background: var(--color-bluelagoon-midnight);
-  color: var(--color-bluelagoon-snow);
-  border-radius: 9999px;
-  padding-inline: 1.25rem;
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease;
-  box-shadow: 0 1px 2px rgba(0, 19, 77, 0.1);
+  background: var(--color-bluelagoon-blue-500);
+  color: #ffffff;
+  border-radius: 0;
+  padding-inline: 1.5rem;
+  font-family: var(--font-accent);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.2s ease;
 }
 .btn-primary:hover {
-  background: var(--color-bluelagoon-deep);
-  box-shadow: 0 6px 16px -8px rgba(0, 19, 77, 0.45);
+  background: var(--color-bluelagoon-blue-700);
 }
 .btn-primary:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
+/* Secondary CTA — mossy green, the brand's accent button. */
 .btn-bright {
-  background: var(--color-bluelagoon-bright);
-  color: var(--color-bluelagoon-snow);
-  border-radius: 9999px;
-  transition: background 0.15s ease;
+  background: var(--color-bluelagoon-moss-600);
+  color: #ffffff;
+  border-radius: 0;
+  padding-inline: 1.5rem;
+  font-family: var(--font-accent);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.2s ease;
 }
 .btn-bright:hover {
-  background: var(--color-bluelagoon-midnight);
+  background: var(--color-bluelagoon-moss-700);
 }
 
+/* Outlined ghost — for quiet actions in chrome. */
 .btn-secondary {
   background: transparent;
-  color: var(--color-bluelagoon-midnight);
-  border: 1px solid var(--color-bluelagoon-line);
-  border-radius: 9999px;
+  color: var(--color-bluelagoon-blue-500);
+  border: 1px solid var(--color-bluelagoon-blue-200);
+  border-radius: 0;
+  font-family: var(--font-accent);
+  font-weight: 500;
+  letter-spacing: 0.02em;
   transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
 }
 .btn-secondary:hover {
-  border-color: var(--color-bluelagoon-midnight);
-  background: var(--color-bluelagoon-mist);
+  border-color: var(--color-bluelagoon-blue-500);
+  background: var(--color-bluelagoon-water-200);
 }
 
 @keyframes pulse-soft {
@@ -164,7 +228,7 @@ body {
 /* Scrollbar polish */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-bluelagoon-line) transparent;
+  scrollbar-color: var(--color-bluelagoon-blue-200) transparent;
 }
 
 /* Accessibility menu toggles — applied on <html> by AccessibilityMenu */
@@ -192,12 +256,12 @@ html.a11y-underline-links a {
 /* Markdown prose tweaks for /concept */
 .prose-bluelagoon {
   --tw-prose-body: var(--color-bluelagoon-ink);
-  --tw-prose-headings: var(--color-bluelagoon-midnight);
-  --tw-prose-bold: var(--color-bluelagoon-midnight);
-  --tw-prose-links: var(--color-bluelagoon-midnight);
+  --tw-prose-headings: var(--color-bluelagoon-blue-500);
+  --tw-prose-bold: var(--color-bluelagoon-blue-500);
+  --tw-prose-links: var(--color-bluelagoon-moss-600);
   --tw-prose-quotes: var(--color-bluelagoon-muted);
-  --tw-prose-quote-borders: var(--color-bluelagoon-aurora);
-  --tw-prose-code: var(--color-bluelagoon-midnight);
+  --tw-prose-quote-borders: var(--color-bluelagoon-moss-400);
+  --tw-prose-code: var(--color-bluelagoon-blue-500);
   --tw-prose-hr: var(--color-bluelagoon-line);
   --tw-prose-bullets: var(--color-bluelagoon-muted);
   --tw-prose-th-borders: var(--color-bluelagoon-line);

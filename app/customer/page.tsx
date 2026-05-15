@@ -68,23 +68,23 @@ export default async function CustomerHome({
 
   return (
     <div className="flex flex-1 flex-col gap-6">
-      <section className="relative overflow-hidden rounded-3xl border border-bluelagoon-line bg-gradient-to-b from-bluelagoon-cloud to-bluelagoon-paper p-4 sm:p-6">
+      <section className="relative overflow-hidden border border-bluelagoon-line bg-gradient-to-b from-bluelagoon-water-200 to-bluelagoon-paper p-4 sm:p-6">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-bluelagoon-aurora/20 blur-3xl"
+          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-bluelagoon-water-400/30 blur-3xl"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-bluelagoon-bright/10 blur-3xl"
+          className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-bluelagoon-moss-300/20 blur-3xl"
         />
 
         <div className="relative">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bluelagoon-muted">
-            <span className="text-bluelagoon-midnight">Concierge</span>
+          <p className="font-accent text-[11px] font-medium uppercase tracking-[0.18em] text-bluelagoon-muted">
+            <span className="text-bluelagoon-blue-500">Concierge</span>
             {disrupted && (
               <>
                 <span className="text-bluelagoon-line"> · </span>
-                <span className="text-bluelagoon-fiery">
+                <span className="text-bluelagoon-moss-600">
                   {proactivePush ? "proactive push" : "disruption mode"}
                 </span>
               </>
@@ -92,13 +92,13 @@ export default async function CustomerHome({
           </p>
 
           {(proactivePush || (disrupted && fromDemo)) && (
-            <div className="mt-3 flex items-center gap-3 rounded-xl border border-bluelagoon-line bg-bluelagoon-cloud/70 px-4 py-2.5 text-xs text-bluelagoon-ink/80">
+            <div className="mt-3 flex items-center gap-3 border border-bluelagoon-line bg-bluelagoon-water-200 px-4 py-2.5 text-xs text-bluelagoon-ink">
               <span
                 aria-hidden
-                className="pulse-soft h-1.5 w-1.5 flex-none rounded-full bg-bluelagoon-fiery"
+                className="pulse-soft h-1.5 w-1.5 flex-none rounded-full bg-bluelagoon-moss-600"
               />
               <span>
-                <span className="font-semibold text-bluelagoon-midnight">
+                <span className="font-medium text-bluelagoon-blue-500">
                   Same fog event you just saw in ops.
                 </span>{" "}
                 Ninety seconds after the duty controller approved the recovery
@@ -173,14 +173,14 @@ export default async function CustomerHome({
 
       {!disrupted && (
         <section className="flex flex-none flex-wrap items-center gap-2">
-          <span className="mr-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-bluelagoon-muted">
+          <span className="font-accent mr-1 text-[11px] font-medium uppercase tracking-[0.18em] text-bluelagoon-muted">
             Account
           </span>
           {accountShortcuts.map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className="rounded-full border border-bluelagoon-line bg-bluelagoon-paper px-3.5 py-1.5 text-sm font-medium text-bluelagoon-ink/85 transition hover:border-bluelagoon-midnight hover:text-bluelagoon-midnight"
+              className="border border-bluelagoon-line bg-bluelagoon-paper px-3.5 py-1.5 text-sm font-light text-bluelagoon-ink transition hover:border-bluelagoon-blue-500 hover:text-bluelagoon-blue-500"
             >
               {s.label}
             </Link>

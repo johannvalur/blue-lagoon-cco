@@ -10,15 +10,15 @@ import { FooterPolicyLinks } from "./FooterPolicyLinks";
 
 export function Footer() {
   return (
-    <footer className="relative mt-auto bg-black text-bluelagoon-snow">
+    <footer className="relative mt-auto bg-bluelagoon-blue-700 text-bluelagoon-water-100">
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-bluelagoon-aurora/60 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-bluelagoon-water-500/50 to-transparent"
       />
 
       <div className="relative mx-auto max-w-7xl px-6 sm:px-8">
         <div className="flex flex-col items-center gap-5 pb-3 pt-9 sm:flex-row-reverse sm:justify-between sm:pb-4 sm:pt-11">
-          <BrandMark height={20} variant="white" />
+          <BrandMark height={48} variant="white" />
 
           <div className="flex items-center gap-2">
             <a

@@ -28,9 +28,9 @@ export function IntentSearch() {
   }
 
   return (
-    <div className="surface-card rounded-2xl p-5 md:p-6">
-      <div className="flex flex-wrap items-center gap-2 border-b border-bluelagoon-line pb-4 text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-        <button className="rounded-full bg-bluelagoon-midnight px-3 py-1 text-bluelagoon-snow">
+    <div className="surface-card p-6 md:p-7">
+      <div className="font-accent flex flex-wrap items-center gap-2 border-b border-bluelagoon-line pb-4 text-[11px] font-medium uppercase tracking-[0.16em] text-bluelagoon-muted">
+        <button className="bg-bluelagoon-blue-500 px-3 py-1 text-white">
           Conversational
         </button>
         <span className="text-bluelagoon-line">·</span>
@@ -39,15 +39,15 @@ export function IntentSearch() {
         <span className="line-through opacity-60">One-way</span>
         <span className="text-bluelagoon-line">·</span>
         <span className="line-through opacity-60">Multi-city</span>
-        <span className="ml-auto rounded-full bg-bluelagoon-mist px-2.5 py-1 text-[10px] text-bluelagoon-midnight">
+        <span className="ml-auto bg-bluelagoon-water-200 px-2.5 py-1 text-[10px] text-bluelagoon-blue-500">
           Replaces the search form
         </span>
       </div>
 
-      <label className="mt-5 block text-sm font-semibold text-bluelagoon-midnight">
+      <label className="font-accent mt-6 block text-xs font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
         Where would you like to go?
       </label>
-      <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-stretch">
+      <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-stretch">
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -55,27 +55,27 @@ export function IntentSearch() {
           rows={2}
           aria-label="Describe your trip"
           placeholder="Tell us what you want — destination, vibe, dates, or none of the above."
-          className="flex-1 resize-none rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-base text-bluelagoon-ink outline-none transition focus:border-bluelagoon-midnight focus:ring-2 focus:ring-bluelagoon-midnight/15"
+          className="flex-1 resize-none border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-base font-light text-bluelagoon-ink outline-none transition focus:border-bluelagoon-blue-500 focus:ring-1 focus:ring-bluelagoon-blue-500/30"
         />
         <button
           onClick={() => submit(value)}
           disabled={!value.trim()}
-          className="btn-primary inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold md:w-44"
+          className="btn-bright inline-flex items-center justify-center px-6 py-3 text-sm md:w-44"
         >
           Find me a trip →
         </button>
       </div>
 
-      <div className="mt-5">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
+      <div className="mt-6">
+        <p className="font-accent text-[10px] font-medium uppercase tracking-[0.18em] text-bluelagoon-muted">
           Or try one of these
         </p>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {examples.map((e) => (
             <button
               key={e}
               onClick={() => submit(e)}
-              className="rounded-full border border-bluelagoon-line bg-bluelagoon-cloud px-3 py-1.5 text-xs text-bluelagoon-ink transition hover:border-bluelagoon-midnight hover:bg-bluelagoon-mist"
+              className="border border-bluelagoon-line bg-bluelagoon-water-100 px-3 py-1.5 text-xs font-light text-bluelagoon-ink transition hover:border-bluelagoon-blue-500 hover:bg-bluelagoon-water-200"
             >
               {e}
             </button>

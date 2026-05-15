@@ -6,24 +6,24 @@ interface BrandMarkProps {
   className?: string;
 }
 
-// Renders /public/bluelagoon-logo[-white].svg. For production, swap the asset
-// in /public with the controlled file from Blue Lagoon's brand portal.
+const LOGO_RATIO = 1000 / 447;
+
 export function BrandMark({
-  height = 22,
+  height = 32,
   variant = "navy",
   className,
 }: BrandMarkProps) {
-  const width = Math.round((391 / 76) * height);
-  const src =
-    variant === "white" ? "/bluelagoon-logo-white.svg" : "/bluelagoon-logo.svg";
+  const width = Math.round(LOGO_RATIO * height);
+  const filter = variant === "white" ? "brightness(0) invert(1)" : undefined;
   return (
     <Image
-      src={src}
+      src="/bluelagoon-logo.png"
       alt="Blue Lagoon"
       width={width}
       height={height}
       priority
       className={className}
+      style={filter ? { filter } : undefined}
     />
   );
 }
