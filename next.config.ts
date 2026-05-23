@@ -12,10 +12,6 @@ const nextConfig: NextConfig = {
   }),
   images: {
     unoptimized: isStaticExport,
-    ...(isStaticExport && {
-      loader: "custom",
-      loaderFile: "./lib/imageLoader.ts",
-    }),
     remotePatterns: [
       {
         protocol: "https",

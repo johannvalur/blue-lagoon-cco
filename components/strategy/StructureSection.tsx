@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 interface Role {
   title: string;
@@ -246,12 +247,10 @@ export function StructureSection() {
 
           <div className="md:col-span-6">
             <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl shadow-[0_30px_60px_-20px_rgba(15,42,68,0.25)]">
-              <Image
-                src="/strategy/structure.png"
+              <img
+                src={`${BASE}/strategy/structure.png`}
                 alt="Guest in the Blue Lagoon at sunset"
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
               />
               <div
                 aria-hidden

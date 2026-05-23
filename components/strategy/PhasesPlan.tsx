@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 interface Phase {
   num: string;
@@ -165,13 +166,10 @@ export function PhasesPlan() {
         {/* Active phase detail */}
         <div key={phase.num} className="surface-fade mt-10 grid gap-0 overflow-hidden border border-bluelagoon-line bg-bluelagoon-paper md:grid-cols-12">
           <div className="relative min-h-64 md:col-span-4 md:min-h-0">
-            <Image
-              src={phase.image}
+            <img
+              src={`${BASE}${phase.image}`}
               alt={phase.imageAlt}
-              fill
-              sizes="(min-width: 768px) 33vw, 100vw"
-              className="object-cover"
-              priority={phase.num === "01"}
+              className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
           <div className="md:col-span-8 grid gap-8 p-8 md:gap-10 md:p-12 lg:grid-cols-12">

@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 type Status = "ON TRACK" | "ATTENTION" | "OFF TARGET";
 
@@ -810,12 +811,10 @@ export function KpiDashboard() {
           </div>
           <div className="md:col-span-5">
             <div className="relative aspect-[4/3] w-full overflow-hidden">
-              <Image
-                src="/strategy/kpis.png"
+              <img
+                src={`${BASE}/strategy/kpis.png`}
                 alt="Kerlingarfjöll geothermal landscape"
-                fill
-                sizes="(min-width: 768px) 40vw, 100vw"
-                className="object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
           </div>

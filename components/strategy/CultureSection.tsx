@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 interface Rhythm {
   num: string;
@@ -110,12 +111,10 @@ export function CultureSection() {
       className="scroll-mt-24 border-b border-bluelagoon-line bg-bluelagoon-paper"
     >
       <div className="relative isolate overflow-hidden bg-bluelagoon-midnight text-bluelagoon-snow">
-        <Image
-          src="/strategy/culture.png"
+        <img
+          src={`${BASE}/strategy/culture.png`}
           alt="Aerial of geothermal architecture"
-          fill
-          sizes="100vw"
-          className="object-cover opacity-40"
+          className="absolute inset-0 h-full w-full object-cover opacity-40"
         />
         <div
           aria-hidden
@@ -265,12 +264,10 @@ export function CultureSection() {
           </div>
           <div className="md:col-span-5">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-[0_20px_50px_-15px_rgba(15,42,68,0.2)]">
-              <Image
-                src="/strategy/culture3.png"
+              <img
+                src={`${BASE}/strategy/culture3.png`}
                 alt="Blue Lagoon Mineral Mask at the lagoon"
-                fill
-                sizes="(min-width: 768px) 38vw, 100vw"
-                className="object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
           </div>

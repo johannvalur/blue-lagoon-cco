@@ -1,4 +1,4 @@
-import Image from "next/image";
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 interface Pillar {
   num: string;
@@ -79,12 +79,10 @@ export function VisionSection() {
 
           <div className="md:col-span-7 flex items-center justify-center">
             <div className="relative aspect-[4/5] w-full max-w-2xl overflow-hidden rounded-lg">
-              <Image
-                src="/strategy/vision.png"
+              <img
+                src={`${BASE}/strategy/vision.png`}
                 alt="Guests in the Blue Lagoon"
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
           </div>
