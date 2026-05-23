@@ -28,10 +28,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Strip force-dynamic from API routes (incompatible with static export)
+      - name: Isolate strategy routes for static export
         run: |
-          find app/api -name "route.ts" -exec \
-            sed -i 's/^export const dynamic = "force-dynamic"/\/\/ export const dynamic = "force-dynamic"/' {} \;
+          # Remove all non-strategy routes — only /strategy is deployed
+          rm -rf app/api app/customer app/internal app/org app/concept
+          # Minimal root page (strategy has its own layout/nav)
+          printf '"use client";\nexport default function Root() { return null; }\n' > app/page.tsx
 
       - name: Build static export
         run: npm run build
