@@ -5,7 +5,6 @@ import { PolicyModal, type PolicyKey } from "./PolicyModal";
 
 const POLICY_LINKS: { label: string; key: PolicyKey }[] = [
   { label: "Privacy policy", key: "privacy" },
-  { label: "Sitemap", key: "sitemap" },
   { label: "Terms and conditions", key: "terms" },
   { label: "Cookie policy", key: "cookies" },
   { label: "Cookie settings", key: "cookie-settings" },

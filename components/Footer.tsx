@@ -17,42 +17,30 @@ export function Footer() {
           <BrandMark height={28} variant="navy" />
 
           <div className="flex items-center gap-2">
-            <a
-              href="https://www.instagram.com/bluelagoon/"
-              target="_blank"
-              rel="noreferrer noopener"
+            <span
               aria-label="Blue Lagoon on Instagram"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line transition hover:bg-bluelagoon-cloud hover:text-bluelagoon-midnight"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line"
             >
               <FontAwesomeIcon icon={faInstagram} className="h-3.5 w-3.5" />
-            </a>
-            <a
-              href="https://www.facebook.com/BlueLagoon/"
-              target="_blank"
-              rel="noreferrer noopener"
+            </span>
+            <span
               aria-label="Blue Lagoon on Facebook"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line transition hover:bg-bluelagoon-cloud hover:text-bluelagoon-midnight"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line"
             >
               <FontAwesomeIcon icon={faFacebookF} className="h-3.5 w-3.5" />
-            </a>
-            <a
-              href="https://www.linkedin.com/company/bluelagoon/"
-              target="_blank"
-              rel="noreferrer noopener"
+            </span>
+            <span
               aria-label="Blue Lagoon on LinkedIn"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line transition hover:bg-bluelagoon-cloud hover:text-bluelagoon-midnight"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line"
             >
               <FontAwesomeIcon icon={faLinkedinIn} className="h-3.5 w-3.5" />
-            </a>
-            <a
-              href="https://www.youtube.com/bluelagoon"
-              target="_blank"
-              rel="noreferrer noopener"
+            </span>
+            <span
               aria-label="Blue Lagoon on YouTube"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line transition hover:bg-bluelagoon-cloud hover:text-bluelagoon-midnight"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-bluelagoon-mist text-bluelagoon-muted ring-1 ring-inset ring-bluelagoon-line"
             >
               <FontAwesomeIcon icon={faYoutube} className="h-3.5 w-3.5" />
-            </a>
+            </span>
           </div>
 
           <p className="text-center text-[11px] text-bluelagoon-muted sm:text-left">
