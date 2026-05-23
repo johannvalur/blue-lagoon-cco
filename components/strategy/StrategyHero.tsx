@@ -1,9 +1,11 @@
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export function StrategyHero() {
   return (
     <section className="relative isolate flex min-h-[calc(100dvh-53px)] items-center overflow-hidden bg-bluelagoon-midnight text-bluelagoon-snow sm:min-h-[calc(100dvh-65px)]">
       <video
-        src="/strategy/hero.mp4"
-        poster="/strategy/hero-poster.png"
+        src={`${BASE}/strategy/hero.mp4`}
+        poster={`${BASE}/strategy/hero-poster.png`}
         autoPlay
         muted
         loop

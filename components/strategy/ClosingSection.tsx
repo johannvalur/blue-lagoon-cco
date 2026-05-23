@@ -1,3 +1,5 @@
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export function ClosingSection() {
   return (
     <section
@@ -5,8 +7,8 @@ export function ClosingSection() {
       className="relative isolate scroll-mt-24 overflow-hidden bg-bluelagoon-midnight text-bluelagoon-snow"
     >
       <video
-        src="/strategy/closing.mp4"
-        poster="/strategy/closing-poster.png"
+        src={`${BASE}/strategy/closing.mp4`}
+        poster={`${BASE}/strategy/closing-poster.png`}
         autoPlay
         muted
         loop

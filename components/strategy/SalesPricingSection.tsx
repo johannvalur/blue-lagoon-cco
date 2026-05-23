@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 interface Lever {
   title: string;
   detail: string;
@@ -118,8 +120,8 @@ export function SalesPricingSection() {
     >
       <div className="relative isolate overflow-hidden bg-bluelagoon-midnight text-bluelagoon-snow">
         <video
-          src="/strategy/sales-pricing.mp4"
-          poster="/strategy/sales-pricing-poster.png"
+          src={`${BASE}/strategy/sales-pricing.mp4`}
+          poster={`${BASE}/strategy/sales-pricing-poster.png`}
           autoPlay
           muted
           loop
