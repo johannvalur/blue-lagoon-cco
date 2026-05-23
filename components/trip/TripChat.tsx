@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import type { Surface } from "@/lib/anthropic";
 import type {
-  SearchFlightsResult,
-  HoldBookingResult,
+  SearchExperiencesResult,
+  HoldReservationResult,
   SaveTripIdeaResult,
 } from "@/lib/tools/bookingTools";
 import type {
   SearchHotelsResult,
-  SearchCarsResult,
+  SearchTransfersResult,
   SearchPackagesResult,
+  SearchAddonsResult,
 } from "@/lib/tools/inventoryTools";
 import {
   FlightDiscoveryResults,
@@ -28,11 +29,12 @@ import { saveTripIdea } from "@/lib/state/tripIdeas";
 import { readNdjsonStream } from "@/lib/util/ndjsonStream";
 
 type AnyToolResult =
-  | SearchFlightsResult
+  | SearchExperiencesResult
   | SearchHotelsResult
-  | SearchCarsResult
+  | SearchTransfersResult
   | SearchPackagesResult
-  | HoldBookingResult
+  | SearchAddonsResult
+  | HoldReservationResult
   | SaveTripIdeaResult;
 
 type ToolStatus = "running" | "done";
@@ -72,26 +74,35 @@ const ACCENT_DOT: Record<NonNullable<TripChatProps["accent"]>, string> = {
 
 function toolLabel(name: string): string {
   switch (name) {
-    case "search_flights":
-      return "Searching flights…";
+    case "search_experiences":
+      return "Matching visit options to your brief…";
     case "search_hotels":
-      return "Combing hotels…";
-    case "search_cars":
-      return "Lining up rental cars…";
+      return "Looking at the stays…";
+    case "search_transfers":
+      return "Working out how you'll get there…";
     case "search_packages":
-      return "Looking at Blue Lagoon Holidays packages…";
-    case "hold_booking":
-      return "Holding the booking…";
+      return "Pulling up spa packages…";
+    case "search_addons":
+      return "Adding up treatments and add-ons…";
+    case "hold_reservation":
+      return "Holding the reservation…";
     case "save_trip_idea":
-      return "Saving the trip idea…";
+      return "Saving the visit idea…";
     default:
       return "Working…";
   }
 }
 
-function isoPlusDays(days: number): string {
+const TIER_TO_FARE_CLASS: Record<string, FareClass> = {
+  comfort: "Light",
+  premium: "Standard",
+  signature: "Flex",
+  "retreat-spa": "Saga",
+};
+
+function tomorrow(): string {
   const d = new Date();
-  d.setDate(d.getDate() + days);
+  d.setDate(d.getDate() + 1);
   return d.toISOString().slice(0, 10);
 }
 
@@ -104,7 +115,7 @@ export function TripChat({
   emptyHeadline,
   emptySubhead,
   accent = "bright",
-  placeholder = "Tell me where to next, or ask to add a hotel, car, or stopover.",
+  placeholder = "Tell me what you'd like — a half-day, an evening visit, an overnight at Silica.",
   fill = false,
 }: TripChatProps) {
   const accentDot = ACCENT_DOT[accent];
@@ -258,17 +269,22 @@ export function TripChat({
             : it,
         ),
       );
-      if (name === "hold_booking") {
-        const r = result as HoldBookingResult;
-        const fareClass = (r.fare_class.charAt(0).toUpperCase() +
-          r.fare_class.slice(1)) as FareClass;
+      if (name === "hold_reservation") {
+        const r = result as HoldReservationResult;
+        const fareClass =
+          TIER_TO_FARE_CLASS[r.tier_id] ?? "Standard";
+        // Map the spa reservation onto the existing localStorage Trip shape so
+        // the saved-trips strip / status pages keep working.
         saveTrip({
-          ref: r.booking_ref,
-          dest: { iata: r.destination_iata, city: r.destination },
-          depart: r.depart_date,
-          return: r.return_date || null,
+          ref: r.reservation_ref,
+          dest: {
+            iata: r.hotel_id ?? "BLU",
+            city: r.hotel_name ?? "Blue Lagoon",
+          },
+          depart: r.date,
+          return: null,
           fareClass,
-          pax: r.travelers,
+          pax: r.guests,
           totalEUR: r.total_eur,
           status: "held",
           createdAt: new Date().toISOString(),
@@ -300,22 +316,18 @@ export function TripChat({
     }
   }
 
-  function holdOption(
-    option: SearchFlightsResult["options"][number],
-    fareClass: "light" | "standard" | "flex" | "saga",
-  ) {
-    const depart = isoPlusDays(14);
-    const ret = isoPlusDays(19);
-    const synthetic = `Hold the ${option.destination} option, ${depart} to ${ret}, ${fareClass} class, 1 traveller(s).`;
+  function holdTier(option: { tierId: string; name: string }) {
+    const date = tomorrow();
+    const synthetic = `Hold the ${option.name} entry for ${date}, arrival 14:00, 1 guest.`;
     send(synthetic);
   }
 
   function addHotel(hotel: SearchHotelsResult["hotels"][number]) {
-    send(`Add ${hotel.name} (${hotel.cityIata}, ${hotel.area}) to my trip.`);
+    send(`Add a night at ${hotel.name} to my visit.`);
   }
 
-  function addCar(car: SearchCarsResult["cars"][number]) {
-    send(`Add a ${car.name} for the rental car.`);
+  function addTransfer(tr: SearchTransfersResult["transfers"][number]) {
+    send(`Use the ${tr.name} for the transfer.`);
   }
 
   function addPackage(pkg: SearchPackagesResult["packages"][number]) {
@@ -329,29 +341,65 @@ export function TripChat({
     }
   }
 
+  const isEmpty = items.length === 0;
+  const onlyGreeting =
+    items.length === 1 &&
+    items[0].kind === "text" &&
+    items[0].role === "assistant";
+  const showEmptyState = isEmpty || onlyGreeting;
+  const showCenteredHero = isEmpty;
+
   return (
     <div
-      className={`surface-card flex flex-col overflow-hidden rounded-2xl ${
+      className={`flex flex-col overflow-hidden ${
         fill ? "min-h-0 flex-1" : "h-[calc(100vh-12rem)] min-h-[520px]"
       }`}
     >
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto bg-bluelagoon-cloud/60 p-6"
+        className="flex-1 overflow-y-auto bg-bluelagoon-paper px-4 py-6 sm:px-6"
       >
-        {emptyHeadline && (items.length === 0 || (items.length === 1 && items[0].kind === "text" && items[0].role === "assistant")) && (
-          <div className="mb-5">
-            <h2 className="font-loft text-3xl font-extrabold leading-tight tracking-tight text-bluelagoon-midnight md:text-4xl">
-              {emptyHeadline}
-            </h2>
+        {showCenteredHero ? (
+          <div className="mx-auto flex h-full max-w-2xl flex-col items-center justify-center text-center">
+            {emptyHeadline && (
+              <h2 className="font-loft text-3xl font-medium tracking-tight text-bluelagoon-midnight md:text-[2.5rem] md:leading-[1.1]">
+                {emptyHeadline}
+              </h2>
+            )}
             {emptySubhead && (
-              <p className="mt-2 max-w-2xl text-sm text-bluelagoon-ink/85">
+              <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-bluelagoon-ink/70">
                 {emptySubhead}
               </p>
             )}
+            {starters.length > 0 && (
+              <div className="mt-10 grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
+                {starters.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => send(s)}
+                    className="rounded-2xl border border-bluelagoon-line bg-white px-4 py-3.5 text-left text-sm leading-relaxed text-bluelagoon-ink/85 transition hover:border-bluelagoon-midnight hover:bg-bluelagoon-paper hover:shadow-sm"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-        <div className="space-y-4">
+        ) : (
+          <div className="mx-auto max-w-3xl">
+            {showEmptyState && emptyHeadline && (
+              <div className="mb-6">
+                <h2 className="font-loft text-2xl font-medium tracking-tight text-bluelagoon-midnight md:text-3xl">
+                  {emptyHeadline}
+                </h2>
+                {emptySubhead && (
+                  <p className="mt-2 max-w-2xl text-sm text-bluelagoon-ink/70">
+                    {emptySubhead}
+                  </p>
+                )}
+              </div>
+            )}
+            <div className="space-y-4">
           {items.map((it, i) => {
             if (it.kind === "text") {
               return (
@@ -406,19 +454,15 @@ export function TripChat({
             // tool done — render the right card by tool name
             if (!it.result) return null;
 
-            if (it.name === "search_flights") {
-              const r = it.result as SearchFlightsResult;
+            if (it.name === "search_experiences") {
+              const r = it.result as SearchExperiencesResult;
               return (
                 <div key={i} className="message-in flex justify-start">
-                  <div className="w-full max-w-full">
-                    {r.legs && r.legs.length > 0 ? (
+                  <div className="w-full max-w-full space-y-3">
+                    <FlightDiscoveryResults result={r} onHold={holdTier} />
+                    {r.addons && r.addons.length > 0 ? (
                       <FlightLegList result={r} />
-                    ) : (
-                      <FlightDiscoveryResults
-                        result={r}
-                        onHold={holdOption}
-                      />
-                    )}
+                    ) : null}
                   </div>
                 </div>
               );
@@ -435,13 +479,13 @@ export function TripChat({
                 </div>
               );
             }
-            if (it.name === "search_cars") {
+            if (it.name === "search_transfers") {
               return (
                 <div key={i} className="message-in flex justify-start">
                   <div className="w-full max-w-full">
                     <CarResults
-                      result={it.result as SearchCarsResult}
-                      onAdd={addCar}
+                      result={it.result as SearchTransfersResult}
+                      onAdd={addTransfer}
                     />
                   </div>
                 </div>
@@ -459,12 +503,22 @@ export function TripChat({
                 </div>
               );
             }
-            if (it.name === "hold_booking") {
+            if (it.name === "search_addons") {
+              const r = it.result as SearchAddonsResult;
+              return (
+                <div key={i} className="message-in flex justify-start">
+                  <div className="w-full max-w-2xl">
+                    <AddonResultsInline result={r} onSend={send} />
+                  </div>
+                </div>
+              );
+            }
+            if (it.name === "hold_reservation") {
               return (
                 <div key={i} className="message-in flex justify-start">
                   <div className="w-full max-w-md">
                     <BookingConfirmation
-                      result={it.result as HoldBookingResult}
+                      result={it.result as HoldReservationResult}
                     />
                   </div>
                 </div>
@@ -484,58 +538,126 @@ export function TripChat({
             return null;
           })}
 
-          {starters.length > 0 &&
-            (items.length === 0 ||
-              (items.length === 1 &&
-                items[0].kind === "text" &&
-                items[0].role === "assistant")) && (
-              <div className="space-y-2 pt-2">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bluelagoon-muted">
-                  Try
-                </p>
-                <div className="flex flex-wrap gap-2">
+              {starters.length > 0 && onlyGreeting && (
+                <div className="grid grid-cols-1 gap-2 pt-2 sm:grid-cols-2">
                   {starters.map((s) => (
                     <button
                       key={s}
                       onClick={() => send(s)}
-                      className="rounded-full border border-bluelagoon-line bg-bluelagoon-paper px-3 py-1.5 text-left text-xs text-bluelagoon-ink/85 transition hover:border-bluelagoon-midnight hover:text-bluelagoon-midnight"
+                      className="rounded-2xl border border-bluelagoon-line bg-white px-4 py-3 text-left text-sm leading-relaxed text-bluelagoon-ink/85 transition hover:border-bluelagoon-midnight hover:bg-bluelagoon-paper hover:shadow-sm"
                     >
                       {s}
                     </button>
                   ))}
                 </div>
-              </div>
-            )}
-        </div>
+              )}
+            </div>
+          </div>
+        )}
         {error && (
-          <div className="mt-4 rounded-xl border border-bluelagoon-fiery/60 bg-bluelagoon-fiery/10 px-4 py-3 text-sm text-bluelagoon-fiery">
+          <div className="mx-auto mt-4 max-w-3xl rounded-xl border border-bluelagoon-fiery/60 bg-bluelagoon-fiery/10 px-4 py-3 text-sm text-bluelagoon-fiery">
             {error}
           </div>
         )}
       </div>
-      <div className="border-t border-bluelagoon-line bg-bluelagoon-paper p-4">
-        <div className="flex items-end gap-2">
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={onKeyDown}
-            placeholder={placeholder}
-            rows={1}
-            className="flex-1 resize-none rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-sm text-bluelagoon-ink placeholder-bluelagoon-muted/80 outline-none transition focus:border-bluelagoon-midnight focus:ring-2 focus:ring-bluelagoon-midnight/15"
-            disabled={streaming}
-          />
-          <button
-            onClick={() => send(input)}
-            disabled={streaming || !input.trim()}
-            className="btn-primary rounded-xl px-5 py-3 text-sm font-semibold"
-          >
-            {streaming ? "…" : "Send"}
-          </button>
+      <div className="bg-bluelagoon-paper px-4 pb-6 pt-2 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <div className="group flex items-end gap-2 rounded-2xl border border-bluelagoon-line bg-white p-2 shadow-sm transition focus-within:border-bluelagoon-midnight focus-within:shadow-md">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={onKeyDown}
+              placeholder={placeholder}
+              rows={1}
+              className="flex-1 resize-none bg-transparent px-3 py-2.5 text-[15px] leading-relaxed text-bluelagoon-ink placeholder-bluelagoon-muted/70 outline-none"
+              disabled={streaming}
+            />
+            <button
+              onClick={() => send(input)}
+              disabled={streaming || !input.trim()}
+              aria-label="Send message"
+              className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-bluelagoon-midnight text-bluelagoon-snow transition hover:bg-bluelagoon-blue-500 disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              {streaming ? (
+                <span className="block h-2 w-2 animate-pulse rounded-full bg-bluelagoon-snow" />
+              ) : (
+                <svg
+                  aria-hidden
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="12" y1="19" x2="12" y2="5" />
+                  <polyline points="5 12 12 5 19 12" />
+                </svg>
+              )}
+            </button>
+          </div>
+          <div className="mt-2 flex justify-end">
+            <Telemetry snapshot={telemetry} surface={surface} />
+          </div>
         </div>
-        <div className="mt-2 flex justify-end">
-          <Telemetry snapshot={telemetry} surface={surface} />
-        </div>
+      </div>
+    </div>
+  );
+}
+
+// Small inline renderer for search_addons results — kept here rather than
+// in its own file because the visual is light. Each row offers a quick
+// "add" affordance that sends a natural-language follow-up to the chat.
+function AddonResultsInline({
+  result,
+  onSend,
+}: {
+  result: SearchAddonsResult;
+  onSend: (text: string) => void;
+}) {
+  if (!result.addons || result.addons.length === 0) {
+    return (
+      <div className="rounded-2xl border border-bluelagoon-line bg-bluelagoon-paper p-4 text-sm text-bluelagoon-muted">
+        No matching add-ons. Try widening the brief.
+      </div>
+    );
+  }
+  return (
+    <div>
+      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
+        {result.query_summary}
+      </p>
+      <div className="surface-card rounded-2xl border-l-4 border-l-bluelagoon-aurora p-5">
+        <ul className="flex flex-col divide-y divide-bluelagoon-line">
+          {result.addons.map((a) => (
+            <li
+              key={a.id}
+              className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
+            >
+              <div>
+                <div className="font-semibold text-bluelagoon-midnight">
+                  {a.name}
+                </div>
+                <div className="mt-0.5 text-xs text-bluelagoon-muted">
+                  €{a.priceEUR}
+                  {a.durationMin ? ` · ${a.durationMin} min` : ""}
+                  {" · "}
+                  {a.category}
+                </div>
+                <p className="mt-1 text-sm text-bluelagoon-ink">{a.why}</p>
+              </div>
+              <button
+                onClick={() => onSend(`Add the "${a.name}" to my visit.`)}
+                className="shrink-0 rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-3 py-2 text-xs font-semibold text-bluelagoon-midnight transition hover:border-bluelagoon-midnight"
+              >
+                Add
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

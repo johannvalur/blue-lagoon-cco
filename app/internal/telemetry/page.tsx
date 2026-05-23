@@ -13,6 +13,22 @@ interface TotalsRow extends SurfaceUsage {
   surface: string;
 }
 
+// Map internal surface keys to the display labels used elsewhere in the demo.
+// Falls back to the raw key if a surface isn't in the table.
+const SURFACE_LABELS: Record<string, string> = {
+  trip: "Visit",
+  companion: "Companion",
+  loyalty: "Insider",
+  manage: "Manage",
+  status: "Status",
+  ops: "Facility ops",
+  crew: "Spa floor",
+};
+
+function surfaceLabel(key: string): string {
+  return SURFACE_LABELS[key] ?? key;
+}
+
 function emptyTotals(): SurfaceUsage {
   return { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, turns: 0 };
 }
@@ -80,7 +96,8 @@ export default function TelemetryPage() {
               Token & cache telemetry
             </h1>
             <p className="mt-2 max-w-3xl text-bluelagoon-ink/85">
-              Per-surface aggregate · this browser only · session-scoped.
+              Per-surface aggregate across every concierge and floor-team chat
+              — this browser only, session-scoped.
             </p>
           </div>
           <button
@@ -119,7 +136,7 @@ export default function TelemetryPage() {
                       className="bg-bluelagoon-paper hover:bg-bluelagoon-cloud"
                     >
                       <td className="px-4 py-3 font-semibold text-bluelagoon-midnight">
-                        {r.surface}
+                        {surfaceLabel(r.surface)}
                       </td>
                       <td className="px-4 py-3 text-right font-mono text-bluelagoon-ink/85">
                         {fmt(r.turns)}

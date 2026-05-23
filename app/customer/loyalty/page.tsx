@@ -1,17 +1,49 @@
 import { LoyaltyChat } from "@/components/LoyaltyChat";
 
 const TIERS = [
-  { tier: "Bronze", spend: "€0–€1,500 / yr", perks: "Earn miles · priority waitlist" },
-  { tier: "Silver", spend: "€1,500–€4,000 / yr", perks: "Free seat selection · 1 lounge pass" },
-  { tier: "Gold", spend: "€4,000–€8,000 / yr", perks: "Lounge access · priority boarding" },
-  { tier: "Platinum", spend: "€8,000+ / yr", perks: "Saga lounge · upgrades · companion fares" },
+  {
+    tier: "Friend",
+    spend: "€0–€500 / yr",
+    perks: "Earn points · 10% off skincare",
+  },
+  {
+    tier: "Insider",
+    spend: "€500–€1,500 / yr",
+    perks: "Priority arrival window · 1 treatment upgrade",
+  },
+  {
+    tier: "Ambassador",
+    spend: "€1,500–€4,000 / yr",
+    perks: "Signature tier on entry · Lava priority · early-hours access",
+  },
+  {
+    tier: "Patron",
+    spend: "€4,000+ / yr",
+    perks: "Retreat Spa entry · private guide · suite upgrades",
+  },
 ];
 
 const RELATIONSHIP_SIGNALS = [
-  { icon: "✈️", label: "Trips taken", note: "Counts the journey, not just the spend." },
-  { icon: "💬", label: "Recommendations followed", note: "Did our suggestion become your trip?" },
-  { icon: "👥", label: "Friends referred", note: "First-timers count double in their first year." },
-  { icon: "🌿", label: "Low-impact route choices", note: "Direct over connecting, off-peak over peak." },
+  {
+    icon: "·",
+    label: "Visits made",
+    note: "Counts the day itself, not just the spend on it.",
+  },
+  {
+    icon: "·",
+    label: "Recommendations followed",
+    note: "Did our suggested treatment or arrival window become your visit?",
+  },
+  {
+    icon: "·",
+    label: "Friends introduced",
+    note: "First-timers count double on their first visit.",
+  },
+  {
+    icon: "·",
+    label: "Quiet-hour preferences",
+    note: "Early or late slots, mid-week visits, low-season weeks.",
+  },
 ];
 
 export default function LoyaltyPage() {
@@ -20,7 +52,7 @@ export default function LoyaltyPage() {
       <div className="space-y-10">
         <section className="pt-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            Saga Club · concept
+            Insider · concept
           </p>
           <h1 className="mt-2 font-loft text-4xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-5xl">
             Loyalty, redesigned.
@@ -36,11 +68,11 @@ export default function LoyaltyPage() {
               Today
             </p>
             <h2 className="mt-2 font-loft text-2xl font-bold text-bluelagoon-midnight">
-              Tier ladder, by revenue.
+              Tier ladder, by spend.
             </h2>
             <p className="mt-2 text-sm text-bluelagoon-ink/85">
-              Bronze → Silver → Gold → Platinum. The ladder you climb by
-              spending more on flights.
+              Friend → Insider → Ambassador → Patron. The ladder you climb by
+              visiting more often and going deeper.
             </p>
             <ul className="mt-5">
               {TIERS.map((t) => (
@@ -76,7 +108,10 @@ export default function LoyaltyPage() {
             <ul className="mt-5 space-y-4">
               {RELATIONSHIP_SIGNALS.map((s) => (
                 <li key={s.label} className="flex gap-3">
-                  <span className="text-xl leading-none" aria-hidden>
+                  <span
+                    className="text-xl leading-none text-bluelagoon-muted"
+                    aria-hidden
+                  >
                     {s.icon}
                   </span>
                   <div>
@@ -96,10 +131,10 @@ export default function LoyaltyPage() {
         <section>
           <div className="mb-4">
             <h2 className="font-loft text-2xl font-bold text-bluelagoon-midnight md:text-3xl">
-              Talk to your Saga concierge
+              Talk to your Insider concierge
             </h2>
             <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-              Anna J. · Saga 4321 · Gold
+              Sigríður Margrét Oddsdóttir · BL 0001 314 · Ambassador
             </p>
           </div>
           <LoyaltyChat />

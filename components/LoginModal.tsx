@@ -86,7 +86,7 @@ export function LoginModal({ open, onClose, onSignIn }: LoginModalProps) {
     e.preventDefault();
     if (submitting) return;
     if (!email.trim() || !password) {
-      setError("Please enter your email or Saga number and password.");
+      setError("Please enter your email or Insider number and password.");
       return;
     }
     setError(null);
@@ -160,7 +160,7 @@ export function LoginModal({ open, onClose, onSignIn }: LoginModalProps) {
           </button>
 
           <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-bluelagoon-muted">
-            Saga Club
+            Insider
           </p>
           <h2
             id={titleId}
@@ -169,8 +169,8 @@ export function LoginModal({ open, onClose, onSignIn }: LoginModalProps) {
             Welcome back.
           </h2>
           <p className="mt-2 max-w-[34ch] text-[13.5px] leading-relaxed text-bluelagoon-ink/70">
-            Sign in to manage trips, redeem points and unlock companion
-            upgrades.
+            Sign in to manage visits, redeem points and unlock member
+            extras.
           </p>
         </div>
 
@@ -184,7 +184,7 @@ export function LoginModal({ open, onClose, onSignIn }: LoginModalProps) {
               htmlFor="login-email"
               className="block text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted"
             >
-              Email or Saga number
+              Email or Insider number
             </label>
             <input
               id="login-email"
@@ -418,7 +418,7 @@ export function LoginModal({ open, onClose, onSignIn }: LoginModalProps) {
             href="#"
             className="font-semibold text-bluelagoon-midnight transition hover:underline"
           >
-            Join Saga Club →
+            Join Insider →
           </a>
         </div>
       </div>

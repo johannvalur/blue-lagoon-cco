@@ -19,8 +19,8 @@ export default function CheckInPage({ params }: CheckInPageProps) {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
-  const [name, setName] = useState("Anna J.");
-  const [passport, setPassport] = useState("");
+  const [name, setName] = useState("Sigríður Margrét Oddsdóttir");
+  const [mobile, setMobile] = useState("");
 
   useEffect(() => {
     setTrip(getTrip(ref));
@@ -42,13 +42,20 @@ export default function CheckInPage({ params }: CheckInPageProps) {
       <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            <span className="text-bluelagoon-midnight">Check in</span>
+            <span className="text-bluelagoon-midnight">Arrival</span>
             <span className="text-bluelagoon-line"> · </span>
-            {step === 1 ? "step 1 of 2" : "boarding pass"}
+            {step === 1 ? "step 1 of 2" : "entry pass"}
           </p>
           <h1 className="mt-1 font-loft text-3xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-4xl">
-            {step === 1 ? "Confirm passenger details" : "You're checked in."}
+            {step === 1 ? "Confirm guest details" : "You're set for arrival."}
           </h1>
+          {step === 2 && (
+            <p className="mt-2 max-w-xl text-sm text-bluelagoon-ink/85">
+              Show this at the spa kiosk on arrival. Bring a swimsuit (or rent
+              one), arrive within your window, and leave watches and jewellery
+              in the room.
+            </p>
+          )}
         </div>
 
         {hydrated && !trip && (
@@ -57,13 +64,13 @@ export default function CheckInPage({ params }: CheckInPageProps) {
               We can't find {ref} in this browser.
             </p>
             <p className="mt-2 text-sm text-bluelagoon-ink/85">
-              Trips are stored locally for the demo.
+              Reservations are stored locally for the demo.
             </p>
             <Link
               href="/customer/trips"
               className="btn-primary mt-5 inline-flex rounded-full px-4 py-2 text-sm font-semibold"
             >
-              ← Back to trips
+              ← Back to my visits
             </Link>
           </div>
         )}
@@ -71,11 +78,11 @@ export default function CheckInPage({ params }: CheckInPageProps) {
         {trip && trip.status === "cancelled" && (
           <div className="surface-card rounded-2xl border-l-4 border-l-bluelagoon-fiery p-6">
             <p className="font-loft text-lg font-semibold text-bluelagoon-midnight">
-              This booking was cancelled.
+              This reservation was cancelled.
             </p>
             <p className="mt-2 text-sm text-bluelagoon-ink/85">
-              You can't check in on a cancelled trip. Hold a fresh booking
-              instead.
+              You can't generate an arrival pass for a cancelled visit. Hold a
+              fresh reservation instead.
             </p>
             <Link
               href="/customer"
@@ -91,14 +98,14 @@ export default function CheckInPage({ params }: CheckInPageProps) {
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                  Trip
+                  Visit
                 </p>
                 <p className="mt-1 font-loft text-lg font-semibold text-bluelagoon-midnight">
-                  {trip.dest.city} · {trip.dest.iata}
+                  Blue Lagoon · {trip.fareClass} entry
                 </p>
                 <p className="mt-1 text-sm text-bluelagoon-ink">
                   {trip.depart}
-                  {trip.return ? ` → ${trip.return}` : " (one-way)"}
+                  {trip.return ? ` → ${trip.return}` : " (single visit)"}
                 </p>
                 <p className="mt-2 font-mono text-xs tracking-widest text-bluelagoon-muted">
                   {trip.ref}
@@ -107,26 +114,26 @@ export default function CheckInPage({ params }: CheckInPageProps) {
               <div className="space-y-3">
                 <label className="block">
                   <span className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                    Passenger name
+                    Guest name
                   </span>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="mt-1 w-full rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-3 py-2 text-sm text-bluelagoon-ink outline-none transition focus:border-bluelagoon-midnight focus:ring-2 focus:ring-bluelagoon-midnight/15"
-                    placeholder="Anna J."
+                    placeholder="Sigríður Margrét Oddsdóttir"
                   />
                 </label>
                 <label className="block">
                   <span className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                    Passport number
+                    Mobile (for arrival texts)
                   </span>
                   <input
-                    type="text"
-                    value={passport}
-                    onChange={(e) => setPassport(e.target.value)}
+                    type="tel"
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
                     className="mt-1 w-full rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-3 py-2 text-sm tracking-wider text-bluelagoon-ink outline-none transition focus:border-bluelagoon-midnight focus:ring-2 focus:ring-bluelagoon-midnight/15"
-                    placeholder="A1234567"
+                    placeholder="+354 555 0123"
                   />
                 </label>
               </div>
@@ -134,7 +141,7 @@ export default function CheckInPage({ params }: CheckInPageProps) {
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
               <p className="text-xs text-bluelagoon-muted">
-                We'll generate a demo boarding pass — no real check-in happens.
+                We'll generate a demo entry pass — no real arrival is recorded.
               </p>
               <button
                 onClick={() => setStep(2)}
@@ -155,7 +162,7 @@ export default function CheckInPage({ params }: CheckInPageProps) {
                 href="/customer/trips"
                 className="rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-2 text-sm font-semibold text-bluelagoon-midnight transition hover:border-bluelagoon-midnight"
               >
-                ← My trips
+                ← My visits
               </Link>
               <button
                 onClick={() => setStep(1)}

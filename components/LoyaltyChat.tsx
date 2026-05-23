@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type {
   CheckBalanceResult,
-  RedeemForFlightResult,
+  RedeemForVisitResult,
   ViewYearRecapResult,
 } from "@/lib/tools/loyaltyTools";
 import { Markdown } from "@/components/Markdown";
@@ -11,7 +11,7 @@ import { Telemetry, type TelemetrySnapshot } from "@/components/Telemetry";
 
 type LoyaltyResult =
   | CheckBalanceResult
-  | RedeemForFlightResult
+  | RedeemForVisitResult
   | ViewYearRecapResult;
 
 type ToolStatus = "running" | "done";
@@ -33,17 +33,17 @@ interface LoyaltyChatProps {
 }
 
 const DEFAULT_GREETING =
-  "Welcome back, Anna. I can pull your balance, project a redemption, or run a year recap — what's on your mind?";
+  "Welcome back, Sigríður. I can pull your Insider balance, project a points redemption, or run a year recap — what's on your mind?";
 
 const DEFAULT_STARTERS = [
-  "What's my Saga balance?",
-  "Can I use points to fly to Boston in March?",
-  "Give me my 2025 recap.",
+  "My balance",
+  "What's a tier away?",
+  "Year recap for 2026",
 ];
 
 function toolLabel(name: string): string {
-  if (name === "check_balance") return "Pulling your Saga balance…";
-  if (name === "redeem_for_flight") return "Projecting the redemption…";
+  if (name === "check_balance") return "Pulling your Insider balance…";
+  if (name === "redeem_for_visit") return "Projecting the redemption…";
   if (name === "view_year_recap") return "Compiling your year…";
   return "Working…";
 }
@@ -291,7 +291,7 @@ export function LoyaltyChat({
                     {it.role === "assistant" && (
                       <div className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
                         <span className="h-1.5 w-1.5 rounded-full bg-bluelagoon-lilac pulse-soft" />
-                        Saga concierge
+                        Insider concierge
                       </div>
                     )}
                     {it.role === "user" ? (
@@ -330,12 +330,12 @@ export function LoyaltyChat({
                 </div>
               );
             }
-            if (it.name === "redeem_for_flight" && it.result) {
+            if (it.name === "redeem_for_visit" && it.result) {
               return (
                 <div key={i} className="flex justify-start">
                   <div className="w-full max-w-md">
                     <RedemptionCard
-                      result={it.result as RedeemForFlightResult}
+                      result={it.result as RedeemForVisitResult}
                     />
                   </div>
                 </div>
@@ -369,7 +369,7 @@ export function LoyaltyChat({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="Ask Saga concierge anything…"
+            placeholder="Ask the Insider concierge anything…"
             rows={1}
             className="flex-1 resize-none rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-sm text-bluelagoon-ink placeholder-bluelagoon-muted/80 outline-none transition focus:border-bluelagoon-lilac focus:ring-2 focus:ring-bluelagoon-lilac/15"
             disabled={streaming}
@@ -394,7 +394,7 @@ function BalanceCard({ result }: { result: CheckBalanceResult }) {
   return (
     <div className="surface-card rounded-2xl border-l-4 border-l-bluelagoon-lilac p-5">
       <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-lilac">
-        Saga · {result.tier}
+        Insider · {result.tier}
       </p>
       <div className="mt-1 flex items-baseline justify-between gap-3">
         <div className="font-loft text-xl font-bold text-bluelagoon-midnight">
@@ -405,7 +405,7 @@ function BalanceCard({ result }: { result: CheckBalanceResult }) {
       <div className="mt-4 grid grid-cols-2 gap-3">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Points
+            Lagoon points
           </p>
           <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
             {result.points.toLocaleString()}
@@ -416,30 +416,44 @@ function BalanceCard({ result }: { result: CheckBalanceResult }) {
             YTD spend
           </p>
           <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
-            €{result.ytdSpendEUR.toLocaleString()}
+            €{result.ytdEUR.toLocaleString()}
           </p>
         </div>
       </div>
-      {result.ptsToNextTier > 0 && (
+      {result.nextTier && result.gapToNextTierEUR > 0 && (
         <p className="mt-3 text-xs text-bluelagoon-muted">
-          ~{result.ptsToNextTier.toLocaleString()} pts equivalent to the next
-          tier.
+          €{result.gapToNextTierEUR.toLocaleString()} to {result.nextTier}.
         </p>
+      )}
+      {result.perks.length > 0 && (
+        <div className="mt-4">
+          <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
+            Tier perks
+          </p>
+          <ul className="mt-1.5 space-y-1 text-xs text-bluelagoon-ink">
+            {result.perks.map((p) => (
+              <li key={p} className="flex items-start gap-2">
+                <span className="mt-1.5 h-1 w-1 flex-none rounded-full bg-bluelagoon-lilac" />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       {result.vouchers.length > 0 && (
         <div className="mt-4">
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Vouchers
+            Active vouchers
           </p>
           <ul className="mt-1.5 space-y-1.5">
             {result.vouchers.map((v) => (
               <li
-                key={v.name}
+                key={v.id}
                 className="flex items-baseline justify-between gap-3 text-xs text-bluelagoon-ink"
               >
-                <span>{v.name}</span>
+                <span>{v.label}</span>
                 <span className="text-bluelagoon-muted">
-                  exp. {v.expires}
+                  exp. {v.expiresOn}
                 </span>
               </li>
             ))}
@@ -450,15 +464,22 @@ function BalanceCard({ result }: { result: CheckBalanceResult }) {
   );
 }
 
-function RedemptionCard({ result }: { result: RedeemForFlightResult }) {
-  const enough = result.has_enough && result.points_required > 0;
-  const accent = enough
+function RedemptionCard({ result }: { result: RedeemForVisitResult }) {
+  const eligible = result.eligible && result.pointsRequired > 0;
+  const accent = eligible
     ? "border-l-bluelagoon-volcanic"
     : "border-l-bluelagoon-fiery";
-  const label = enough ? "Redemption available" : "Not yet";
-  const labelClass = enough
+  const label = eligible ? "Redemption available" : "Not yet";
+  const labelClass = eligible
     ? "text-bluelagoon-volcanic"
     : "text-bluelagoon-fiery";
+
+  const kindCopy: Record<RedeemForVisitResult["kind"], string> = {
+    entry: "Entry tier",
+    hotel: "Hotel night",
+    treatment: "Treatment",
+    product: "Products",
+  };
 
   return (
     <div className={`surface-card rounded-2xl border-l-4 ${accent} p-5`}>
@@ -469,14 +490,14 @@ function RedemptionCard({ result }: { result: RedeemForFlightResult }) {
       </p>
       <div className="mt-1 flex items-baseline gap-2">
         <div className="font-loft text-xl font-bold text-bluelagoon-midnight">
-          {result.destination_iata || "Destination"}
+          {result.optionLabel || "Redemption"}
         </div>
         <div className="text-xs text-bluelagoon-muted">
-          one-way economy from KEF
+          {kindCopy[result.kind]}
         </div>
       </div>
 
-      {result.points_required > 0 ? (
+      {result.pointsRequired > 0 ? (
         <>
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div>
@@ -484,41 +505,52 @@ function RedemptionCard({ result }: { result: RedeemForFlightResult }) {
                 Points required
               </p>
               <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
-                {result.points_required.toLocaleString()}
+                {result.pointsRequired.toLocaleString()}
               </p>
             </div>
             <div>
               <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                {enough ? "After redemption" : "Current balance"}
+                {eligible ? "After redemption" : "Current balance"}
               </p>
               <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
-                {result.points_after.toLocaleString()}
+                {result.pointsAfter.toLocaleString()}
               </p>
             </div>
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-3 text-xs text-bluelagoon-ink">
-            <div>
-              <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                Suggested date
-              </p>
-              <p>{result.suggested_date}</p>
-            </div>
-            <div>
-              <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                Voucher stack
-              </p>
-              <p>{result.voucher_eligible ? "Eligible" : "Not on this leg"}</p>
-            </div>
-          </div>
+          {result.reason && (
+            <p className="mt-3 text-xs text-bluelagoon-fiery">{result.reason}</p>
+          )}
         </>
       ) : (
-        <p className="mt-3 text-sm text-bluelagoon-ink">
-          {result.reason ?? "Couldn't price this redemption."}
-        </p>
+        <>
+          <p className="mt-3 text-sm text-bluelagoon-ink">
+            {result.reason ?? "Couldn't price this redemption."}
+          </p>
+          {result.alternatives && result.alternatives.length > 0 && (
+            <div className="mt-3">
+              <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
+                Try one of these
+              </p>
+              <ul className="mt-1.5 space-y-1 text-xs text-bluelagoon-ink">
+                {result.alternatives.slice(0, 4).map((alt) => (
+                  <li
+                    key={alt.id}
+                    className="flex items-baseline justify-between gap-3"
+                  >
+                    <span>{alt.label}</span>
+                    <span className="text-bluelagoon-muted">
+                      {alt.pointsRequired.toLocaleString()} pts
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
       )}
 
       <p className="mt-4 text-xs text-bluelagoon-muted">
-        Demo projection — not a held award.
+        Demo projection — not a held booking.
       </p>
     </div>
   );
@@ -531,33 +563,41 @@ function YearRecapCard({ result }: { result: ViewYearRecapResult }) {
         Year recap · {result.year}
       </p>
       <div className="mt-1 font-loft text-xl font-bold text-bluelagoon-midnight">
-        Anna's flying year
+        Sigríður&apos;s year at Blue Lagoon
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-3 gap-3">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Trips
+            Visits
           </p>
           <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
-            {result.trips}
+            {result.visitsCount}
           </p>
         </div>
         <div>
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Miles flown
+            Total
           </p>
           <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
-            {result.miles_flown.toLocaleString()}
+            €{result.totalEUR.toLocaleString()}
+          </p>
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
+            Points
+          </p>
+          <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
+            {result.pointsEarned.toLocaleString()}
           </p>
         </div>
       </div>
-      {result.top_destinations.length > 0 && (
+      {result.topAddons.length > 0 && (
         <div className="mt-4">
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Top destinations
+            Top add-ons
           </p>
           <div className="mt-1.5 flex flex-wrap gap-1">
-            {result.top_destinations.map((d) => (
+            {result.topAddons.map((d) => (
               <span
                 key={d}
                 className="rounded-full bg-bluelagoon-mist/60 px-2 py-0.5 text-[11px] text-bluelagoon-ink"

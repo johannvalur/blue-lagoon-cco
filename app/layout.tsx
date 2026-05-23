@@ -11,7 +11,7 @@ config.autoAddCss = false;
 export const metadata: Metadata = {
   title: "Blue Lagoon · an AI-first concept",
   description:
-    "An exploration of what an AI-first Blue Lagoon could look like. Clickable prototype + strategy doc.",
+    "An exploration of what an AI-first Blue Lagoon — the geothermal spa and resort in Grindavík — could look like. Clickable prototype + strategy doc.",
 };
 
 export default function RootLayout({

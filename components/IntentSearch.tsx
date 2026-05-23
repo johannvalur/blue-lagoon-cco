@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const examples = [
-  "Somewhere warm in late February, 5 days, leaving from Reykjavík.",
-  "A long weekend in October — food, design, outside.",
-  "New York for a Wednesday meeting, home by Friday night.",
-  "Cheapest beach right now.",
+  "Half-day with an in-water massage next Thursday.",
+  "Aurora overnight at Silica for two, mid-November.",
+  "Couples ritual on a Saturday, late afternoon.",
+  "Check my Insider balance.",
 ];
 
 export function IntentSearch() {
@@ -34,18 +34,18 @@ export function IntentSearch() {
           Conversational
         </button>
         <span className="text-bluelagoon-line">·</span>
-        <span className="line-through opacity-60">Round-trip</span>
+        <span className="line-through opacity-60">Date &amp; tier</span>
         <span className="text-bluelagoon-line">·</span>
-        <span className="line-through opacity-60">One-way</span>
+        <span className="line-through opacity-60">Add-ons</span>
         <span className="text-bluelagoon-line">·</span>
-        <span className="line-through opacity-60">Multi-city</span>
+        <span className="line-through opacity-60">Hotel night</span>
         <span className="ml-auto bg-bluelagoon-water-200 px-2.5 py-1 text-[10px] text-bluelagoon-blue-500">
-          Replaces the search form
+          Replaces the booking form
         </span>
       </div>
 
       <label className="font-accent mt-6 block text-xs font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
-        Where would you like to go?
+        What kind of visit?
       </label>
       <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-stretch">
         <textarea
@@ -53,8 +53,8 @@ export function IntentSearch() {
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={onKeyDown}
           rows={2}
-          aria-label="Describe your trip"
-          placeholder="Tell us what you want — destination, vibe, dates, or none of the above."
+          aria-label="Describe your visit"
+          placeholder="Tell us what you want — date, mood, treatments, or nothing of the sort."
           className="flex-1 resize-none border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-base font-light text-bluelagoon-ink outline-none transition focus:border-bluelagoon-blue-500 focus:ring-1 focus:ring-bluelagoon-blue-500/30"
         />
         <button
@@ -62,7 +62,7 @@ export function IntentSearch() {
           disabled={!value.trim()}
           className="btn-bright inline-flex items-center justify-center px-6 py-3 text-sm md:w-44"
         >
-          Find me a trip →
+          Plan my visit →
         </button>
       </div>
 

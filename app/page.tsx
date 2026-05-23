@@ -35,6 +35,11 @@ export default function HomePage() {
           <h1 className="heading-display mt-4 max-w-3xl text-5xl text-bluelagoon-water-100 md:text-7xl">
             Blue Lagoon, Reimagined with AI
           </h1>
+          <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-bluelagoon-water-100/85 md:text-lg">
+            A geothermal spa and resort, rebuilt around conversation —
+            booking, treatments and hotel nights in one thread; real-time
+            care when the steam stops; copilots for every role on site.
+          </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Link
               href="/?demo=1"
@@ -49,6 +54,9 @@ export default function HomePage() {
               Run in offline mode
             </Link>
           </div>
+          <p className="font-accent mt-4 text-[11px] uppercase tracking-[0.18em] text-bluelagoon-water-300/80">
+            Live API · or canned responses, no key needed
+          </p>
         </div>
       </section>
     </>

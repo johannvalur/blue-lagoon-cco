@@ -16,16 +16,16 @@ export function Hero() {
             AI-first concept · prototype
           </p>
           <h1 className="heading-display text-5xl text-bluelagoon-blue-500 md:text-7xl">
-            Flights to Europe, Iceland and North&nbsp;America
+            Geothermal water, a hotel night, a quiet ritual
             <span className="text-bluelagoon-muted">,</span>
             <br />
             <span className="text-bluelagoon-blue-400">
-              booked the way you actually plan a trip.
+              planned the way you actually think about a visit.
             </span>
           </h1>
           <p className="mt-8 max-w-xl text-base font-light leading-relaxed text-bluelagoon-ink md:text-lg">
-            We&rsquo;ve already got the structural advantage — the North
-            Atlantic hub, the brand, a small enough footprint to actually
+            We&rsquo;ve already got the structural advantage — the lagoon
+            itself, two on-site hotels, a small enough footprint to actually
             rebuild around AI. This is what that could look like, end to end.
           </p>
         </div>
@@ -39,15 +39,15 @@ export function Hero() {
       <div className="font-accent relative grid grid-cols-2 gap-6 border-t border-bluelagoon-line bg-bluelagoon-water-200 px-8 py-7 text-sm text-bluelagoon-ink md:grid-cols-4 md:px-16">
         <div>
           <span className="block font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
-            North Atlantic stopover
+            Lagoon &amp; hotels
           </span>
           <span className="mt-1 block text-xs text-bluelagoon-muted">
-            Hub-as-superpower
+            Silica · The Retreat
           </span>
         </div>
         <div>
           <span className="block font-medium uppercase tracking-[0.14em] text-bluelagoon-blue-500">
-            Saga Club
+            Insider
           </span>
           <span className="mt-1 block text-xs text-bluelagoon-muted">
             Loyalty, redesigned

@@ -19,7 +19,7 @@ function statusPillStyles(status: TripStatus): string {
 
 function statusLabel(status: TripStatus): string {
   if (status === "held") return "Held";
-  if (status === "checked-in") return "Checked in";
+  if (status === "checked-in") return "Arrived";
   return "Cancelled";
 }
 
@@ -45,26 +45,27 @@ export default function TripsPage() {
       <div className="space-y-8">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            <span className="text-bluelagoon-midnight">My trips</span>
+            <span className="text-bluelagoon-midnight">My visits</span>
             <span className="text-bluelagoon-line"> · </span>local to this
             browser
           </p>
           <h1 className="mt-1 font-loft text-3xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-4xl">
-            Your held bookings
+            Your held reservations
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-bluelagoon-ink/85">
-            Trips you held with the concierge live here. Manage them, or pull up
-            a boarding pass when it's time to fly.
+            Visits you held with the concierge live here. Change a date, layer
+            on a treatment, or pull up your arrival pass when the day comes.
           </p>
         </div>
 
         {hydrated && trips.length === 0 && (
           <div className="surface-card rounded-2xl p-8 text-center">
             <p className="font-loft text-lg font-semibold text-bluelagoon-midnight">
-              No trips yet.
+              No visits yet.
             </p>
             <p className="mt-2 text-sm text-bluelagoon-ink/85">
-              Tell the concierge where you'd like to go and we'll hold it here.
+              Tell the concierge what kind of visit you're after and we'll
+              hold it here.
             </p>
             <Link
               href="/customer"
@@ -88,7 +89,7 @@ export default function TripsPage() {
                       {t.dest.city}
                     </div>
                     <div className="text-xs text-bluelagoon-muted">
-                      {t.dest.iata} · {t.fareClass} · {t.pax} traveller
+                      {t.fareClass} entry · {t.pax} guest
                       {t.pax === 1 ? "" : "s"}
                     </div>
                   </div>
@@ -102,7 +103,7 @@ export default function TripsPage() {
                 <div className="mt-4 flex items-baseline justify-between gap-3">
                   <div>
                     <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                      Schedule
+                      When
                     </p>
                     <p className="text-sm text-bluelagoon-ink">
                       {formatDateRange(t.depart, t.return)}
@@ -128,7 +129,7 @@ export default function TripsPage() {
                       href={`/customer/check-in/${t.ref}`}
                       className="rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-3 py-2 text-xs font-semibold text-bluelagoon-midnight transition hover:border-bluelagoon-midnight hover:bg-bluelagoon-mist"
                     >
-                      Check in →
+                      Arrival pass →
                     </Link>
                   )}
                   <Link

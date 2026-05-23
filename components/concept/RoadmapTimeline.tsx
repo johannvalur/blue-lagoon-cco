@@ -13,62 +13,62 @@ interface YearEntry {
 const ROADMAP: YearEntry[] = [
   {
     label: "Year 1",
-    title: "Foundations and proof",
-    theme: "Platform stood up. Two pilots in market. Ops copilot in sandbox.",
+    title: "Pilot, expand, foundation",
+    theme: "90-day pilot. 180-day expansion. Operations and ancillary by end of year.",
     quarters: [
       {
         quarter: "Q1",
-        text: "Stand up the AI platform team. Select model providers (Anthropic primary, credible secondary). Build the model gateway and evaluation suite. Establish the squad model in two pilot product areas.",
+        text: "90-day pilot. Stand up the AI platform team. Select model providers (Anthropic primary, credible secondary). Build the gateway and evaluation suite. Ship the conversational concierge to members and repeat guests only, behind a flag, as a 10% holdout against the legacy funnel.",
       },
       {
         quarter: "Q2",
-        text: "Ship the conversational booking prototype to a 5% A/B test on the consumer site. Ship the crew copilot to one base (KEF). Begin building the ops control copilot in a non-production sandbox.",
+        text: "180-day expansion. Expand the concierge to all guests. Launch the pre-arrival and on-property companion to members. Begin the facility operations copilot in a shadow-mode sandbox. Ship the first internal copilots — therapist protocol, hotel front desk — to opted-in staff.",
       },
       {
         quarter: "Q3",
-        text: "Expand booking to 50% A/B. Move the crew copilot to all bases. Begin shadow-mode evaluation of the ops control copilot against historical IROPS events.",
+        text: "Operations. Move the facility operations copilot to the duty floor in second-screen mode. Expand internal copilots to mask-bar, F&B, and member services. Begin the ancillary engine on intent-aware upgrade prompts in the concierge.",
       },
       {
         quarter: "Q4",
-        text: "Launch the trip companion in beta to Saga Club Gold members. Move the ops control copilot to production in second-screen mode (visible alongside controllers, not in the decision path).",
+        text: "Ancillary and integration. Ancillary engine on in-spa F&B and post-visit skincare follow-up. Member services and Ambassador concierge in production. Facility ops copilot moves into the decision path with explicit authority boundaries — proposes, manager approves.",
       },
     ],
   },
   {
     label: "Year 2",
-    title: "Scale and integration",
-    theme: "Booking flips to default. Companion goes wide. Maintenance and ancillaries land.",
+    title: "Scale and depth",
+    theme: "Concierge as default. Companion wide. Hotel-specific and geothermal copilots land.",
     quarters: [
       {
         quarter: "Q5–Q6",
-        text: "Conversational booking becomes the default consumer surface. Trip companion expands to all Saga Club members.",
+        text: "Concierge becomes the default booking surface across channels. Companion expands to all guests, post-visit follow-up running by default.",
       },
       {
         quarter: "Q7",
-        text: "Predictive maintenance triage launches on the 737 MAX fleet — newest, most data-rich.",
+        text: "Hotel front desk, housekeeping, and Retreat-specific copilots reach full coverage. Moss-specific F&B copilot — with the tasting-menu pacing logic — launches.",
       },
       {
         quarter: "Q8",
-        text: "Dynamic ancillary engine launches. Saga loyalty redesign begins.",
+        text: "Geothermal and facility engineering reference copilot launches, read-only, with strict human-in-the-loop policy. Skincare retail integration deepens.",
       },
     ],
   },
   {
     label: "Year 3",
     title: "Operating model lock-in",
-    theme: "Ops in the decision path. Loyalty relaunched. Internal copilot organisation-wide.",
+    theme: "Ops in the decision path. Member program redesigned. Internal copilot organisation-wide.",
     quarters: [
       {
         quarter: "Q9–Q10",
-        text: "Ops control copilot moves into the decision path with explicit authority boundaries — proposes, controller approves, AI executes downstream rebookings, crew comms, and EU261 notifications.",
+        text: "Facility operations copilot is the daily working surface of the duty manager. Decision log is the source of truth for shift-handover and incident review.",
       },
       {
         quarter: "Q11",
-        text: "Saga loyalty redesign launches.",
+        text: "Member program (Ambassador, Patron) redesigned around AI-personalised journeys, with the concierge as the primary touchpoint.",
       },
       {
         quarter: "Q12",
-        text: "Internal copilot expands to finance, procurement, and dispatch. Cross-organisation rollout complete.",
+        text: "Cross-organisation rollout complete. Every role with a corpus has a copilot grounded in it.",
       },
     ],
   },

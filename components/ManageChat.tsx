@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { Markdown } from "@/components/Markdown";
 import { Telemetry, type TelemetrySnapshot } from "@/components/Telemetry";
 import { getTrip, updateTrip, type FareClass } from "@/lib/state/trips";
+import type { EntryTier } from "@/lib/data/customer/tripScenario";
 import type {
   ChangeDatesResult,
-  CancelBookingResult,
+  CancelReservationResult,
 } from "@/lib/tools/manageTools";
 
 interface ManageChatProps {
@@ -22,35 +23,46 @@ type Item =
       id: string;
       name: string;
       status: ToolStatus;
-      result?: ChangeDatesResult | CancelBookingResult;
+      result?: ChangeDatesResult | CancelReservationResult;
     };
 
 function toolLabel(name: string): string {
-  if (name === "change_dates") return "Updating your dates…";
-  if (name === "cancel_booking") return "Cancelling your booking…";
+  if (name === "change_dates") return "Updating your visit…";
+  if (name === "cancel_reservation") return "Cancelling your reservation…";
   return "Working…";
 }
 
-// Map our stored fareClass label back to the lowercase id the tools and
-// FARE_RULES use.
-function fareClassToId(
-  fc: FareClass,
-): "light" | "standard" | "flex" | "saga" {
-  return fc.toLowerCase() as "light" | "standard" | "flex" | "saga";
+// Map the stored FareClass label (legacy from the trips store) onto an
+// EntryTier. The trips store still uses airline-style labels so we map them
+// to the closest spa tier for the demo.
+function fareClassToTier(fc: FareClass): EntryTier {
+  switch (fc) {
+    case "Light":
+      return "Comfort";
+    case "Standard":
+      return "Premium";
+    case "Flex":
+      return "Signature";
+    case "Saga":
+      return "Retreat Spa";
+    default:
+      return "Premium";
+  }
 }
 
 export function ManageChat({ tripRef }: ManageChatProps) {
   const trip = getTrip(tripRef);
+  const tier: EntryTier = trip ? fareClassToTier(trip.fareClass) : "Premium";
 
   // Hidden context seed — the model will treat this as the first user turn
   // but we render it visually as a system note (or hide it entirely).
   const seed = trip
-    ? `(context: managing booking ${trip.ref} to ${trip.dest.city} (${trip.dest.iata}), depart ${trip.depart}${trip.return ? `, return ${trip.return}` : " (one-way)"}, ${trip.fareClass} class, ${trip.pax} traveller(s), held total €${trip.totalEUR})`
-    : `(context: trip ${tripRef} not found)`;
+    ? `(context: managing reservation ${trip.ref} at Blue Lagoon, visit ${trip.depart}${trip.return ? `, hotel through ${trip.return}` : ""}, ${tier} tier, ${trip.pax} guest(s), held total €${trip.totalEUR})`
+    : `(context: reservation ${tripRef} not found)`;
 
   const greeting = trip
-    ? `You're managing **${trip.dest.city}** (${trip.ref}). I can move your dates or cancel — what do you need?`
-    : `I can't find that booking in this browser. It may have been made on another device.`;
+    ? `You're managing **${trip.ref}** — ${tier} tier for ${trip.depart}. I can move your date or arrival window, or cancel. What do you need?`
+    : `I can't find that reservation in this browser. It may have been made on another device.`;
 
   const [items, setItems] = useState<Item[]>([
     { kind: "text", role: "assistant", content: greeting },
@@ -74,7 +86,7 @@ export function ManageChat({ tripRef }: ManageChatProps) {
     next: Item[],
   ): { role: "user" | "assistant"; content: string }[] {
     // Inject the hidden context as the first user turn so the model knows
-    // exactly what booking we're managing — without showing it in the UI.
+    // exactly what reservation we're managing — without showing it in the UI.
     const out: { role: "user" | "assistant"; content: string }[] = [
       { role: "user", content: seed },
       { role: "assistant", content: greeting },
@@ -116,8 +128,9 @@ export function ManageChat({ tripRef }: ManageChatProps) {
           messages: buildOutgoingMessages(next),
           context: {
             ref: trip.ref,
-            fareClass: fareClassToId(trip.fareClass),
+            tier,
             totalEUR: trip.totalEUR,
+            proximity: "today",
           },
         }),
       });
@@ -207,7 +220,7 @@ export function ManageChat({ tripRef }: ManageChatProps) {
     } else if (e.type === "tool_result") {
       const id = e.tool_use_id as string;
       const name = e.name as string;
-      const result = e.result as ChangeDatesResult | CancelBookingResult;
+      const result = e.result as ChangeDatesResult | CancelReservationResult;
 
       setItems((prev) =>
         prev.map((it) =>
@@ -222,10 +235,9 @@ export function ManageChat({ tripRef }: ManageChatProps) {
       if (name === "change_dates") {
         const r = result as ChangeDatesResult;
         updateTrip(tripRef, {
-          depart: r.new_depart,
-          return: r.new_return,
+          depart: r.new_date,
         });
-      } else if (name === "cancel_booking") {
+      } else if (name === "cancel_reservation") {
         updateTrip(tripRef, { status: "cancelled" });
       }
     } else if (e.type === "done") {
@@ -259,9 +271,10 @@ export function ManageChat({ tripRef }: ManageChatProps) {
 
   const starters = trip
     ? [
-        "Move my dates a week later.",
-        "What's the change fee on this fare?",
-        "Cancel this booking.",
+        "Change my date to tomorrow.",
+        "Move my arrival to 19:00.",
+        "What does it cost to upgrade to Signature?",
+        "Cancel this reservation.",
       ]
     : [];
 
@@ -289,7 +302,7 @@ export function ManageChat({ tripRef }: ManageChatProps) {
                     {it.role === "assistant" && (
                       <div className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
                         <span className="h-1.5 w-1.5 rounded-full bg-bluelagoon-fiery pulse-soft" />
-                        Manage trip
+                        Manage reservation
                       </div>
                     )}
                     {it.role === "user" ? (
@@ -327,14 +340,16 @@ export function ManageChat({ tripRef }: ManageChatProps) {
                 <div key={i} className="flex justify-start">
                   <div className="surface-card w-full max-w-md rounded-2xl border-l-4 border-l-bluelagoon-crisp p-4">
                     <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-crisp">
-                      Dates updated
+                      Visit updated
                     </p>
                     <div className="mt-2 font-mono text-xs tracking-widest text-bluelagoon-muted">
                       {r.ref}
                     </div>
                     <div className="mt-2 text-sm text-bluelagoon-ink">
-                      {r.new_depart}
-                      {r.new_return ? ` → ${r.new_return}` : " (one-way)"}
+                      {r.new_date}
+                      {r.new_arrival_window
+                        ? ` · arrival ${r.new_arrival_window}`
+                        : ""}
                     </div>
                     <div className="mt-3 flex items-baseline gap-2">
                       <span className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
@@ -342,16 +357,21 @@ export function ManageChat({ tripRef }: ManageChatProps) {
                       </span>
                       <span className="font-loft text-lg font-bold text-bluelagoon-midnight">
                         {r.change_fee_eur === 0
-                          ? "€0 — covered by your fare"
+                          ? "€0 — no fee"
                           : `€${r.change_fee_eur}`}
                       </span>
                     </div>
+                    {r.note && (
+                      <p className="mt-2 text-xs text-bluelagoon-muted">
+                        {r.note}
+                      </p>
+                    )}
                   </div>
                 </div>
               );
             }
-            if (it.name === "cancel_booking" && it.result) {
-              const r = it.result as CancelBookingResult;
+            if (it.name === "cancel_reservation" && it.result) {
+              const r = it.result as CancelReservationResult;
               return (
                 <div key={i} className="flex justify-start">
                   <div className="surface-card w-full max-w-md rounded-2xl border-l-4 border-l-bluelagoon-fiery p-4">
@@ -363,14 +383,19 @@ export function ManageChat({ tripRef }: ManageChatProps) {
                     </div>
                     <div className="mt-3">
                       <span className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-                        Refund
+                        {r.refund_eur > 0 ? "Refund" : "Goodwill voucher"}
                       </span>
                       <p className="font-loft text-lg font-bold text-bluelagoon-midnight">
                         {r.refund_eur > 0
                           ? `€${r.refund_eur}`
-                          : "€0 — non-refundable fare"}
+                          : `€${r.voucher_eur} voucher`}
                       </p>
                     </div>
+                    {r.note && (
+                      <p className="mt-2 text-xs text-bluelagoon-muted">
+                        {r.note}
+                      </p>
+                    )}
                   </div>
                 </div>
               );
@@ -381,8 +406,8 @@ export function ManageChat({ tripRef }: ManageChatProps) {
 
         {!trip && (
           <div className="mt-4 rounded-xl border border-bluelagoon-line bg-bluelagoon-paper p-4 text-sm text-bluelagoon-muted">
-            Trips are stored in this browser. If you booked on another device,
-            we won't see it here.
+            Reservations are stored in this browser. If you booked on another
+            device, we won't see it here.
           </div>
         )}
 
@@ -420,7 +445,9 @@ export function ManageChat({ tripRef }: ManageChatProps) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder={
-              trip ? "Move dates, cancel, ask a question…" : "No trip loaded."
+              trip
+                ? "Move dates, change arrival, cancel, ask a question…"
+                : "No reservation loaded."
             }
             rows={1}
             className="flex-1 resize-none rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-sm text-bluelagoon-ink placeholder-bluelagoon-muted/80 outline-none transition focus:border-bluelagoon-midnight focus:ring-2 focus:ring-bluelagoon-midnight/15"

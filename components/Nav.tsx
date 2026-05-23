@@ -15,8 +15,12 @@ export function Nav() {
             aria-label="Blue Lagoon"
             className="flex flex-none items-center text-bluelagoon-midnight"
           >
-            <BrandMark height={36} className="sm:hidden" />
-            <BrandMark height={44} className="hidden sm:block" />
+            <span className="sm:hidden">
+              <BrandMark height={20} />
+            </span>
+            <span className="hidden sm:inline-block">
+              <BrandMark height={24} />
+            </span>
           </Link>
         </div>
 

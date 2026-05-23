@@ -59,10 +59,10 @@ const SECTION_META: Record<
 };
 
 const PILLARS: Record<string, PillarMeta> = {
-  "3.1": { num: "3.1", title: "Customer journey" },
-  "3.2": { num: "3.2", title: "Operations" },
-  "3.3": { num: "3.3", title: "Revenue & commercial" },
-  "3.4": { num: "3.4", title: "Internal tooling" },
+  "3.1": { num: "3.1", title: "Conversational guest journey" },
+  "3.2": { num: "3.2", title: "Facility operations copilot" },
+  "3.3": { num: "3.3", title: "Ancillary revenue engine" },
+  "3.4": { num: "3.4", title: "Internal copilots for every role" },
 };
 
 function parseSections(markdown: string): SectionMeta[] {

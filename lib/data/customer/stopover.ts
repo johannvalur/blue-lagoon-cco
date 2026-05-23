@@ -1,328 +1,203 @@
-export type StopoverRegion =
-  | "reykjavik"
-  | "golden-circle"
-  | "south-coast"
-  | "north"
-  | "east"
-  | "reykjanes";
+// Blue Lagoon add-ons — treatments, dining upgrades, products, and
+// experience upgrades a guest can layer on top of an entry tier. Replaces
+// the old "stopover activities" list. Filename kept stable so other agents'
+// imports still resolve.
 
-export type StopoverSeason = "year-round" | "winter" | "summer";
+export type AddonCategory = "treatment" | "dining" | "product" | "upgrade";
 
-export type StopoverVibe =
-  | "photography"
-  | "food"
-  | "geothermal"
-  | "history"
-  | "adventure"
-  | "nature"
-  | "design"
-  | "wildlife"
-  | "culture"
-  | "family";
+export type AddonVibe =
+  | "couples"
+  | "ritual"
+  | "icon"
+  | "deep-tissue"
+  | "float"
+  | "skincare"
+  | "evening"
+  | "aurora"
+  | "tasting"
+  | "indulgence";
 
-export interface StopoverActivity {
+export interface Addon {
   id: string;
   name: string;
-  region: StopoverRegion;
-  durationHours: number;
-  season: StopoverSeason;
-  vibes: StopoverVibe[];
-  transport: string;
-  costEUR: number;
-  blurb: string;
+  category: AddonCategory;
+  // Duration in minutes when relevant (treatments, dining). Omitted for
+  // products and quick upgrades.
+  durationMin?: number;
+  priceEUR: number;
+  vibes: AddonVibe[];
+  whyShort: string;
 }
 
-// Curated stopover activities. Costs are indicative per-person in EUR.
-// Vibes are kept to two or three per entry on purpose.
-export const STOPOVER_ACTIVITIES: StopoverActivity[] = [
-  // ---- Reykjavík ---------------------------------------------------------
+export const ADDONS: Addon[] = [
+  // ---- Treatments ------------------------------------------------------
   {
-    id: "rvk-hallgrimskirkja",
-    name: "Hallgrímskirkja",
-    region: "reykjavik",
-    durationHours: 1,
-    season: "year-round",
-    vibes: ["history", "design"],
-    transport: "walk from city centre",
-    costEUR: 10,
-    blurb:
-      "The basalt-column church on the hill. Take the tower lift for the best 360° view of the coloured rooftops.",
+    id: "addon-massage-30",
+    name: "In-water massage, 30 min",
+    category: "treatment",
+    durationMin: 30,
+    priceEUR: 95,
+    vibes: ["ritual"],
+    whyShort:
+      "Floating massage on a foam mat in a quiet corner of the lagoon. The shortest treatment that still feels like a treatment.",
   },
   {
-    id: "rvk-harpa",
-    name: "Harpa concert hall",
-    region: "reykjavik",
-    durationHours: 1,
-    season: "year-round",
-    vibes: ["design", "culture"],
-    transport: "walk along the harbour",
-    costEUR: 0,
-    blurb:
-      "Olafur Eliasson's honeycomb glass facade glows differently every hour. Free to wander, ticketed shows most evenings.",
+    id: "addon-massage-60",
+    name: "In-water massage, 60 min",
+    category: "treatment",
+    durationMin: 60,
+    priceEUR: 175,
+    vibes: ["ritual", "deep-tissue"],
+    whyShort:
+      "The most-booked single treatment. An hour of warm-water floating massage; sleep-grade afterwards.",
   },
   {
-    id: "rvk-roasters",
-    name: "Reykjavík Roasters",
-    region: "reykjavik",
-    durationHours: 1,
-    season: "year-round",
-    vibes: ["food", "culture"],
-    transport: "walk",
-    costEUR: 6,
-    blurb:
-      "The local third-wave benchmark. Two small rooms, single-origin Aeropress, and the city's best people-watching window seat.",
+    id: "addon-massage-120",
+    name: "In-water massage, 120 min",
+    category: "treatment",
+    durationMin: 120,
+    priceEUR: 320,
+    vibes: ["ritual", "indulgence"],
+    whyShort:
+      "Two-hour signature massage. Reserved well in advance — therapists do at most three of these a day.",
   },
   {
-    id: "rvk-kex",
-    name: "Kex Hostel bar",
-    region: "reykjavik",
-    durationHours: 2,
-    season: "year-round",
-    vibes: ["food", "culture"],
-    transport: "walk from city centre",
-    costEUR: 25,
-    blurb:
-      "A converted biscuit factory. Long shared tables, lamb stew, occasional live music — equally good for a long lunch or a late drink.",
+    id: "addon-float-60",
+    name: "Float therapy, 60 min",
+    category: "treatment",
+    durationMin: 60,
+    priceEUR: 140,
+    vibes: ["float", "ritual"],
+    whyShort:
+      "Weightless floating session in a quiet pool with low light. Good for tight shoulders and jet lag.",
   },
   {
-    id: "rvk-sundholl",
-    name: "Sundhöll thermal pool",
-    region: "reykjavik",
-    durationHours: 1.5,
-    season: "year-round",
-    vibes: ["geothermal", "culture"],
-    transport: "walk from city centre",
-    costEUR: 8,
-    blurb:
-      "The neighbourhood pool locals actually use. Hot pots, a steam room, a 25m lap pool — Iceland's living room, for a few euros.",
-  },
-
-  // ---- Golden Circle -----------------------------------------------------
-  {
-    id: "gc-thingvellir",
-    name: "Þingvellir national park",
-    region: "golden-circle",
-    durationHours: 2,
-    season: "year-round",
-    vibes: ["history", "nature"],
-    transport: "rental car or coach tour",
-    costEUR: 0,
-    blurb:
-      "Where the Mid-Atlantic ridge surfaces and the Vikings held the world's first parliament. Walk the rift between two continents.",
+    id: "addon-silica-scrub",
+    name: "Silica salt scrub, 45 min",
+    category: "treatment",
+    durationMin: 45,
+    priceEUR: 85,
+    vibes: ["skincare"],
+    whyShort:
+      "Body exfoliation using mineral salt from the lagoon. Skin feels different for days.",
   },
   {
-    id: "gc-geysir",
-    name: "Geysir geothermal field",
-    region: "golden-circle",
-    durationHours: 1,
-    season: "year-round",
-    vibes: ["geothermal", "photography"],
-    transport: "rental car or coach tour",
-    costEUR: 0,
-    blurb:
-      "Strokkur erupts roughly every 7 minutes — a column of boiling water as tall as a five-storey building. Steamy and a bit theatrical.",
+    id: "addon-algae-wrap",
+    name: "Algae mineral wrap, 60 min",
+    category: "treatment",
+    durationMin: 60,
+    priceEUR: 150,
+    vibes: ["skincare", "ritual"],
+    whyShort:
+      "Warm body wrap with Blue Lagoon algae. Pairs well with a 30-minute massage afterwards.",
   },
   {
-    id: "gc-gullfoss",
-    name: "Gullfoss waterfall",
-    region: "golden-circle",
-    durationHours: 1,
-    season: "year-round",
-    vibes: ["nature", "photography"],
-    transport: "rental car or coach tour",
-    costEUR: 0,
-    blurb:
-      "The 'golden falls' — two tiers, a glacial canyon, and usually a rainbow. Wear something waterproof; the spray is generous.",
+    id: "addon-couples-ritual",
+    name: "Couples ritual, 120 min",
+    category: "treatment",
+    durationMin: 120,
+    priceEUR: 440,
+    vibes: ["couples", "ritual", "indulgence"],
+    whyShort:
+      "Side-by-side: silica scrub, algae wrap, time in a private water room. The popular anniversary booking.",
   },
 
-  // ---- South Coast -------------------------------------------------------
+  // ---- Dining ----------------------------------------------------------
   {
-    id: "sc-seljalandsfoss",
-    name: "Seljalandsfoss",
-    region: "south-coast",
-    durationHours: 1,
-    season: "year-round",
-    vibes: ["photography", "nature"],
-    transport: "rental car (1.5h from Reykjavík)",
-    costEUR: 8,
-    blurb:
-      "A 60m waterfall you can walk behind. Bring a rain shell and shoes with grip — the path gets slick.",
+    id: "addon-lava-dinner",
+    name: "Lava dinner reservation",
+    category: "dining",
+    durationMin: 90,
+    priceEUR: 0,
+    vibes: ["icon"],
+    whyShort:
+      "Reservation at Lava, set into the lava cliff overlooking the lagoon. Premium tier and above includes it; otherwise it's a paid à la carte booking.",
   },
   {
-    id: "sc-skogafoss",
-    name: "Skógafoss",
-    region: "south-coast",
-    durationHours: 1.5,
-    season: "year-round",
-    vibes: ["photography", "nature"],
-    transport: "rental car (2h from Reykjavík)",
-    costEUR: 0,
-    blurb:
-      "A perfect rectangle of water — wide, loud, frequently rainbowed. Climb the staircase on the right for a view down the valley.",
-  },
-  {
-    id: "sc-reynisfjara",
-    name: "Reynisfjara black-sand beach",
-    region: "south-coast",
-    durationHours: 1.5,
-    season: "year-round",
-    vibes: ["photography", "nature"],
-    transport: "rental car (2.5h from Reykjavík)",
-    costEUR: 0,
-    blurb:
-      "Basalt columns, sea stacks, and waves that catch tourists out. Stay well back from the water — the sneaker waves here are no joke.",
-  },
-  {
-    id: "sc-vik",
-    name: "Vík village",
-    region: "south-coast",
-    durationHours: 2,
-    season: "year-round",
-    vibes: ["food", "culture"],
-    transport: "rental car (2.5h from Reykjavík)",
-    costEUR: 30,
-    blurb:
-      "A 300-soul village under a green-roofed church. A natural overnight stop on a south-coast loop — try the lamb at Suður Vík.",
-  },
-  {
-    id: "sc-fjadrargljufur",
-    name: "Fjaðrárgljúfur canyon",
-    region: "south-coast",
-    durationHours: 1.5,
-    season: "year-round",
-    vibes: ["photography", "adventure"],
-    transport: "rental car (3.5h from Reykjavík)",
-    costEUR: 0,
-    blurb:
-      "A 100m moss-walled canyon carved by an ancient glacial river. The clifftop path is short, the views are not subtle.",
+    id: "addon-moss-tasting",
+    name: "Moss tasting menu, 7 courses",
+    category: "dining",
+    durationMin: 150,
+    priceEUR: 280,
+    vibes: ["tasting", "indulgence"],
+    whyShort:
+      "Seven-course tasting menu at Moss, fine dining at The Retreat. Wine pairing extra. Closed Mondays.",
   },
 
-  // ---- North & East ------------------------------------------------------
+  // ---- Mask bar upgrades ----------------------------------------------
   {
-    id: "n-akureyri",
-    name: "Akureyri town",
-    region: "north",
-    durationHours: 4,
-    season: "year-round",
-    vibes: ["food", "culture"],
-    transport: "domestic flight from RVK (45 min)",
-    costEUR: 80,
-    blurb:
-      "The capital of the north — botanic gardens, a serious coffee scene, and heart-shaped traffic lights. Worth a domestic hop on a longer stopover.",
+    id: "addon-mask-bar-algae",
+    name: "Algae mask at the mask bar",
+    category: "upgrade",
+    priceEUR: 25,
+    vibes: ["skincare"],
+    whyShort:
+      "Second mask layered on top of the standard silica — algae brightens and firms.",
   },
   {
-    id: "n-myvatn",
-    name: "Mývatn nature baths",
-    region: "north",
-    durationHours: 3,
-    season: "year-round",
-    vibes: ["geothermal", "nature"],
-    transport: "drive from Akureyri (1h)",
-    costEUR: 50,
-    blurb:
-      "The Blue Lagoon's quieter, smaller cousin. Sulphur steam, milky-blue water, and pseudo-craters across the lake.",
+    id: "addon-mask-bar-mineral",
+    name: "Mineral mask at the mask bar",
+    category: "upgrade",
+    priceEUR: 35,
+    vibes: ["skincare"],
+    whyShort:
+      "Mineral salt clay mask, applied at the in-water mask bar. Slightly warming on the skin.",
   },
   {
-    id: "n-husavik",
-    name: "Húsavík whale watching",
-    region: "north",
-    durationHours: 3,
-    season: "year-round",
-    vibes: ["wildlife", "adventure"],
-    transport: "drive from Akureyri (1h)",
-    costEUR: 95,
-    blurb:
-      "Skjálfandi bay is one of the most reliable whale spots in Europe. Humpbacks year-round, blues and minkes in summer.",
+    id: "addon-mask-bar-duo",
+    name: "Algae + mineral mask combo",
+    category: "upgrade",
+    priceEUR: 45,
+    vibes: ["skincare", "indulgence"],
+    whyShort:
+      "Both extras at the mask bar — algae first, mineral second, in-between rinse in the lagoon.",
   },
 
-  // ---- Reykjanes (year-round) -------------------------------------------
+  // ---- Other upgrades --------------------------------------------------
   {
-    id: "rj-blue-lagoon",
-    name: "Blue Lagoon",
-    region: "reykjanes",
-    durationHours: 3,
-    season: "year-round",
-    vibes: ["geothermal", "design"],
-    transport: "20 min from Keflavík airport",
-    costEUR: 90,
-    blurb:
-      "The icon. Silica-blue water, lava walls, swim-up bar. Book ahead — entry slots fill weeks out, especially around evenings.",
-  },
-  {
-    id: "rvk-sky-lagoon",
-    name: "Sky Lagoon",
-    region: "reykjavik",
-    durationHours: 2.5,
-    season: "year-round",
-    vibes: ["geothermal", "design"],
-    transport: "15 min from city centre",
-    costEUR: 75,
-    blurb:
-      "An ocean-edge infinity pool with a seven-step thermal ritual. More grown-up and less crowded than the Blue Lagoon.",
+    id: "addon-heated-lounger",
+    name: "Heated lounger booking",
+    category: "upgrade",
+    priceEUR: 45,
+    vibes: ["evening", "aurora"],
+    whyShort:
+      "Reserved heated stone lounger by the lagoon edge. Best on cold winter evenings when you want to come out and warm up.",
   },
 
-  // ---- Winter only -------------------------------------------------------
+  // ---- Skincare products ----------------------------------------------
   {
-    id: "w-ice-cave",
-    name: "Vatnajökull ice cave tour",
-    region: "south-coast",
-    durationHours: 4,
-    season: "winter",
-    vibes: ["adventure", "photography"],
-    transport: "guided tour from Jökulsárlón",
-    costEUR: 180,
-    blurb:
-      "Crystal-blue caves carved fresh under Europe's largest glacier each winter. November to March only — the ice melts back every spring.",
+    id: "addon-skincare-essential",
+    name: "Essential skincare bundle",
+    category: "product",
+    priceEUR: 120,
+    vibes: ["skincare"],
+    whyShort:
+      "Three-step starter kit (silica mud mask, mineral lotion, hydrating cream) packaged for travel.",
   },
   {
-    id: "w-northern-lights",
-    name: "Northern Lights tour",
-    region: "reykjavik",
-    durationHours: 4,
-    season: "winter",
-    vibes: ["nature", "photography"],
-    transport: "guided coach from Reykjavík",
-    costEUR: 70,
-    blurb:
-      "Aurora season runs September to early April. Pick a tour with a free re-book on cloudy nights — Iceland's weather doesn't read forecasts.",
-  },
-
-  // ---- Summer only -------------------------------------------------------
-  {
-    id: "s-midnight-horse",
-    name: "Midnight-sun horseback ride",
-    region: "reykjavik",
-    durationHours: 2.5,
-    season: "summer",
-    vibes: ["adventure", "nature"],
-    transport: "shuttle from Reykjavík",
-    costEUR: 110,
-    blurb:
-      "Icelandic horses do a fifth gait called the tölt — impossibly smooth. June and July rides go out at 10pm in full daylight.",
-  },
-  {
-    id: "s-puffin-boat",
-    name: "Puffin boat tour",
-    region: "reykjavik",
-    durationHours: 1.5,
-    season: "summer",
-    vibes: ["wildlife", "family"],
-    transport: "departs from Reykjavík harbour",
-    costEUR: 55,
-    blurb:
-      "Mid-May to mid-August, ten million puffins are nesting just offshore. A short hop to Akurey island lands you in the middle of them.",
+    id: "addon-skincare-full",
+    name: "Full ritual bundle",
+    category: "product",
+    priceEUR: 280,
+    vibes: ["skincare", "indulgence"],
+    whyShort:
+      "Seven-piece full home-ritual set, including the algae night mask. Travel-safe, gift-boxed.",
   },
 ];
 
-// Short paragraph the system prompt can reference if it wants to. We keep
-// data and prose separate so the prompt stays compact.
-export function stopoverNetworkSummary(): string {
-  const byRegion: Record<string, number> = {};
-  for (const a of STOPOVER_ACTIVITIES) {
-    byRegion[a.region] = (byRegion[a.region] ?? 0) + 1;
-  }
-  const parts = Object.entries(byRegion).map(
-    ([region, count]) => `${region} (${count})`,
-  );
-  return `${STOPOVER_ACTIVITIES.length} curated activities across ${parts.join(", ")}.`;
+export function addonsSummary(): string {
+  const byCat: Record<string, number> = {};
+  for (const a of ADDONS) byCat[a.category] = (byCat[a.category] ?? 0) + 1;
+  const parts = Object.entries(byCat).map(([k, n]) => `${k} ×${n}`);
+  return `${ADDONS.length} add-ons across ${parts.join(", ")}.`;
 }
+
+// ---- Back-compat shims --------------------------------------------------
+// Old code imported STOPOVER_ACTIVITIES / StopoverActivity / etc. We expose
+// the same names against the new data so unrelated callers keep compiling
+// until their slice owners update.
+
+export type StopoverActivity = Addon;
+export const STOPOVER_ACTIVITIES = ADDONS;
+export const STOPOVERS = ADDONS;
+export const stopoverNetworkSummary = addonsSummary;

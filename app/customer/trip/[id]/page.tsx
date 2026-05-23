@@ -14,14 +14,14 @@ export default async function TripSharePage({ params }: SharePageProps) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-4 py-20 text-center">
         <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bluelagoon-muted">
-          Trip link
+          Visit link
         </p>
         <h1 className="font-loft text-3xl font-extrabold tracking-tight text-bluelagoon-midnight">
-          This trip link is no longer valid.
+          This visit link is no longer valid.
         </h1>
         <p className="max-w-md text-sm text-bluelagoon-ink/85">
           The link may have been truncated or copied incompletely. Open the
-          concierge to plan a new trip.
+          concierge to plan a new visit.
         </p>
         <Link
           href="/customer"
@@ -37,19 +37,23 @@ export default async function TripSharePage({ params }: SharePageProps) {
     <div className="flex flex-1 flex-col gap-6">
       <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-          <span className="text-bluelagoon-midnight">Trip idea</span>
+          <span className="text-bluelagoon-midnight">Visit idea</span>
           <span className="text-bluelagoon-line"> · </span>shared link
         </p>
         <h1 className="mt-1 font-loft text-3xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-4xl">
           {idea.title}
         </h1>
+        <p className="mt-2 max-w-2xl text-sm text-bluelagoon-ink/85">
+          Save this for later, share it with whoever you're coming with, or
+          tell the concierge to hold it.
+        </p>
       </div>
 
       <TripIdeaCard idea={idea} readOnly />
 
       <p className="text-xs text-bluelagoon-muted">
-        This is a concept site. Trip ideas are demo plans — no booking has
-        been made.
+        This is a concept site. Visit ideas are demo plans — no reservation
+        has been made.
       </p>
     </div>
   );

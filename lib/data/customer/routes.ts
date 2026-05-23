@@ -1,180 +1,123 @@
-export interface Route {
-  destination: string;
-  iata: string;
-  country: string;
-  region: "europe" | "north-america" | "iceland";
-  flightTimeHrs: number;
+// Blue Lagoon "Experiences" — the canonical entry tiers expressed as
+// guest-shaped wellness experiences. The four tiers cover most visits;
+// each one anchors a different pace and depth. Companion add-ons and
+// hotel pairings hang off the tier the guest picks.
+
+export type ExperienceCategory =
+  | "day-visit"
+  | "half-day"
+  | "overnight"
+  | "private-journey";
+
+export type ExperienceSeason = "year-round" | "aurora" | "summer";
+
+export interface Experience {
+  id: string;
+  // The entry-tier id this experience anchors. Pairs with ENTRY_TIERS.
+  tierId: "comfort" | "premium" | "signature" | "retreat-spa";
+  name: string;
+  category: ExperienceCategory;
+  durationHours: number;
+  priceFromEUR: number;
   vibe: string[];
-  bestMonths: string[];
-  fromKEFFareEUR: { economy: number; saga: number };
+  bestSeason: ExperienceSeason;
+  suggestedAddons: string[]; // Addon ids
+  whyShort: string;
 }
 
-export const NETWORK: Route[] = [
+export const EXPERIENCES: Experience[] = [
   {
-    destination: "Reykjavík",
-    iata: "KEF",
-    country: "Iceland",
-    region: "iceland",
-    flightTimeHrs: 0,
-    vibe: ["nature", "geothermal", "northern-lights", "design"],
-    bestMonths: ["sep", "oct", "nov", "dec", "jan", "feb", "mar"],
-    fromKEFFareEUR: { economy: 0, saga: 0 },
+    id: "exp-comfort",
+    tierId: "comfort",
+    name: "Comfort visit",
+    category: "day-visit",
+    durationHours: 3,
+    priceFromEUR: 90,
+    vibe: ["essentials", "icon", "layover-friendly"],
+    bestSeason: "year-round",
+    suggestedAddons: ["addon-mask-upgrade-algae"],
+    whyShort:
+      "Three or so hours in the main lagoon with a towel, the silica mud mask, and a drink at the swim-up bar. The original Blue Lagoon experience, no extras.",
   },
   {
-    destination: "Akureyri",
-    iata: "AEY",
-    country: "Iceland",
-    region: "iceland",
-    flightTimeHrs: 0.75,
-    vibe: ["nature", "ski", "fjords", "quiet"],
-    bestMonths: ["jan", "feb", "mar", "jun", "jul", "aug"],
-    fromKEFFareEUR: { economy: 79, saga: 199 },
+    id: "exp-premium",
+    tierId: "premium",
+    name: "Premium visit",
+    category: "day-visit",
+    durationHours: 4,
+    priceFromEUR: 130,
+    vibe: ["essentials", "food", "icon"],
+    bestSeason: "year-round",
+    suggestedAddons: ["addon-lava-dinner", "addon-mask-bar-duo"],
+    whyShort:
+      "Adds the algae mask, slippers, sparkling wine, and a Lava restaurant reservation. The default if it's your first time and you want to linger over dinner.",
   },
   {
-    destination: "Copenhagen",
-    iata: "CPH",
-    country: "Denmark",
-    region: "europe",
-    flightTimeHrs: 3.5,
-    vibe: ["design", "food", "cycling", "city"],
-    bestMonths: ["may", "jun", "jul", "aug", "sep"],
-    fromKEFFareEUR: { economy: 159, saga: 399 },
+    id: "exp-signature",
+    tierId: "signature",
+    name: "Signature half-day",
+    category: "half-day",
+    durationHours: 5,
+    priceFromEUR: 220,
+    vibe: ["treatment", "privacy", "design"],
+    bestSeason: "year-round",
+    suggestedAddons: ["addon-massage-30"],
+    whyShort:
+      "Private changing, robe, and one 30-minute in-water massage. The right tier for a half-day reset without an overnight.",
   },
   {
-    destination: "London",
-    iata: "LHR",
-    country: "United Kingdom",
-    region: "europe",
-    flightTimeHrs: 3.0,
-    vibe: ["city", "theatre", "museums", "food"],
-    bestMonths: ["apr", "may", "jun", "sep", "oct"],
-    fromKEFFareEUR: { economy: 149, saga: 379 },
+    id: "exp-retreat-spa",
+    tierId: "retreat-spa",
+    name: "Retreat Spa journey",
+    category: "private-journey",
+    durationHours: 5,
+    priceFromEUR: 480,
+    vibe: ["luxury", "privacy", "ritual"],
+    bestSeason: "year-round",
+    suggestedAddons: ["addon-moss-tasting"],
+    whyShort:
+      "Five hours at The Retreat — private lagoon, full Blue Lagoon Ritual, Spa Restaurant included. The quiet, slow option.",
   },
   {
-    destination: "Paris",
-    iata: "CDG",
-    country: "France",
-    region: "europe",
-    flightTimeHrs: 3.5,
-    vibe: ["city", "art", "food", "romance"],
-    bestMonths: ["apr", "may", "jun", "sep", "oct"],
-    fromKEFFareEUR: { economy: 169, saga: 419 },
+    id: "exp-aurora-evening",
+    tierId: "premium",
+    name: "Aurora evening visit",
+    category: "day-visit",
+    durationHours: 4,
+    priceFromEUR: 130,
+    vibe: ["aurora", "evening", "photography"],
+    bestSeason: "aurora",
+    suggestedAddons: ["addon-heated-lounger"],
+    whyShort:
+      "A Premium ticket booked for an evening slot in aurora season (Oct–Mar). Steam, dark skies, and on clear nights, the sky lights up overhead.",
   },
   {
-    destination: "Madrid",
-    iata: "MAD",
-    country: "Spain",
-    region: "europe",
-    flightTimeHrs: 4.5,
-    vibe: ["warm", "city", "food", "nightlife", "art"],
-    bestMonths: ["mar", "apr", "may", "sep", "oct"],
-    fromKEFFareEUR: { economy: 199, saga: 489 },
-  },
-  {
-    destination: "Barcelona",
-    iata: "BCN",
-    country: "Spain",
-    region: "europe",
-    flightTimeHrs: 4.5,
-    vibe: ["warm", "beach", "city", "architecture", "food"],
-    bestMonths: ["mar", "apr", "may", "sep", "oct"],
-    fromKEFFareEUR: { economy: 209, saga: 499 },
-  },
-  {
-    destination: "Lisbon",
-    iata: "LIS",
-    country: "Portugal",
-    region: "europe",
-    flightTimeHrs: 4.5,
-    vibe: ["warm", "coastal", "food", "surf", "design"],
-    bestMonths: ["feb", "mar", "apr", "may", "sep", "oct"],
-    fromKEFFareEUR: { economy: 219, saga: 519 },
-  },
-  {
-    destination: "Tenerife",
-    iata: "TFS",
-    country: "Spain",
-    region: "europe",
-    flightTimeHrs: 5.5,
-    vibe: ["warm", "beach", "hiking", "winter-sun", "volcanic"],
-    bestMonths: ["nov", "dec", "jan", "feb", "mar", "apr"],
-    fromKEFFareEUR: { economy: 249, saga: 579 },
-  },
-  {
-    destination: "Berlin",
-    iata: "BER",
-    country: "Germany",
-    region: "europe",
-    flightTimeHrs: 3.75,
-    vibe: ["city", "music", "art", "history", "nightlife"],
-    bestMonths: ["may", "jun", "jul", "aug", "sep"],
-    fromKEFFareEUR: { economy: 169, saga: 419 },
-  },
-  {
-    destination: "Amsterdam",
-    iata: "AMS",
-    country: "Netherlands",
-    region: "europe",
-    flightTimeHrs: 3.5,
-    vibe: ["city", "cycling", "design", "museums"],
-    bestMonths: ["apr", "may", "jun", "sep"],
-    fromKEFFareEUR: { economy: 159, saga: 399 },
-  },
-  {
-    destination: "New York",
-    iata: "JFK",
-    country: "United States",
-    region: "north-america",
-    flightTimeHrs: 5.75,
-    vibe: ["city", "food", "shopping", "theatre"],
-    bestMonths: ["apr", "may", "jun", "sep", "oct"],
-    fromKEFFareEUR: { economy: 359, saga: 899 },
-  },
-  {
-    destination: "Boston",
-    iata: "BOS",
-    country: "United States",
-    region: "north-america",
-    flightTimeHrs: 5.5,
-    vibe: ["city", "history", "academic", "coastal"],
-    bestMonths: ["may", "jun", "sep", "oct"],
-    fromKEFFareEUR: { economy: 339, saga: 849 },
-  },
-  {
-    destination: "Toronto",
-    iata: "YYZ",
-    country: "Canada",
-    region: "north-america",
-    flightTimeHrs: 6.0,
-    vibe: ["city", "diverse", "food", "outdoorsy"],
-    bestMonths: ["may", "jun", "sep", "oct"],
-    fromKEFFareEUR: { economy: 359, saga: 899 },
-  },
-  {
-    destination: "Seattle",
-    iata: "SEA",
-    country: "United States",
-    region: "north-america",
-    flightTimeHrs: 8.5,
-    vibe: ["nature", "coffee", "outdoorsy", "tech"],
-    bestMonths: ["jun", "jul", "aug", "sep"],
-    fromKEFFareEUR: { economy: 459, saga: 1099 },
-  },
-  {
-    destination: "Denver",
-    iata: "DEN",
-    country: "United States",
-    region: "north-america",
-    flightTimeHrs: 8.0,
-    vibe: ["nature", "ski", "mountains", "outdoorsy"],
-    bestMonths: ["dec", "jan", "feb", "mar", "jun", "jul", "aug"],
-    fromKEFFareEUR: { economy: 449, saga: 1079 },
+    id: "exp-couples-ritual",
+    tierId: "signature",
+    name: "Couples ritual",
+    category: "half-day",
+    durationHours: 4,
+    priceFromEUR: 440,
+    vibe: ["couples", "ritual", "privacy"],
+    bestSeason: "year-round",
+    suggestedAddons: ["addon-couples-ritual"],
+    whyShort:
+      "Signature entry with the side-by-side couples ritual: silica scrub, algae wrap, time in a private water room. Easy gift for an anniversary.",
   },
 ];
 
-export function networkSummary(): string {
-  return NETWORK.map(
-    (r) =>
-      `- ${r.destination} (${r.iata}, ${r.country}) — ${r.flightTimeHrs}h from KEF, vibe: ${r.vibe.join(", ")}, best months: ${r.bestMonths.join(", ")}, from €${r.fromKEFFareEUR.economy} economy / €${r.fromKEFFareEUR.saga} Saga.`,
+// Compatibility shim — the canonical export the rest of the slice imports.
+// Other agents may still import NETWORK from older code; if so they will
+// switch to EXPERIENCES as they rewrite their slice.
+export type Route = Experience;
+export const NETWORK = EXPERIENCES;
+
+export function experiencesSummary(): string {
+  return EXPERIENCES.map(
+    (e) =>
+      `- ${e.name} (${e.tierId} tier) — ${e.durationHours}h, from €${e.priceFromEUR}, vibe: ${e.vibe.join(", ")}.`,
   ).join("\n");
 }
+
+// Back-compat alias used by older imports in the trip prompt.
+export const networkSummary = experiencesSummary;

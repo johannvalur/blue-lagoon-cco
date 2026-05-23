@@ -4,52 +4,67 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { LoginModal } from "./LoginModal";
 
+type InsiderTier =
+  | "Insider Friend"
+  | "Insider"
+  | "Ambassador"
+  | "Patron";
+
 interface User {
   name: string;
-  tier: "Saga Silver" | "Saga Gold" | "Saga Platinum" | "Saga Club";
+  tier: InsiderTier;
   initials: string;
-  sagaNumber: string;
+  memberNumber: string;
   photoUrl?: string;
-  sagaPoints: number;
-  tierCredits: number;
+  points: number;
+  ytdEUR: number;
+  // EUR away from the next tier — 0 (or null) means we're at the top.
+  toNextTierEUR: number;
+  nextTier: InsiderTier | null;
 }
 
 const DEMO_USER: User = {
-  name: "Bogi Nils Bogason",
-  tier: "Saga Gold",
-  initials: "BB",
-  sagaNumber: "SC 0001 314",
+  name: "Jóhann Valur",
+  tier: "Ambassador",
+  initials: "JV",
+  memberNumber: "BL 0001 314",
   photoUrl:
-    "https://www.mbl.is/mm/img/tn/e360x480/gs/2025/04/10/425331b2-8604-4799-908a-8ddd377e167b.jpg",
-  sagaPoints: 42_580,
-  tierCredits: 18_250,
+    "https://media.licdn.com/dms/image/v2/C4D03AQGNlujztYgbSQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1625526644013?e=1781136000&v=beta&t=HQRo_PWj-iIh8F-q2Ddi6r6dNmJmTcF3GUu6cyG5RFA",
+  points: 18_250,
+  ytdEUR: 2_640,
+  toNextTierEUR: 2_360,
+  nextTier: "Patron",
 };
 
-const STORAGE_KEY = "bluelagoon-user";
+const STORAGE_KEY = "bluelagoon-user-v2";
+const LEGACY_STORAGE_KEYS = ["bluelagoon-user"];
 
+// Tier accents — re-mapped from the prior Saga colours. Patron gets lilac
+// (the old Platinum slot), Ambassador keeps golden, Insider takes the cool
+// crisp tone, Insider Friend uses aurora as the entry signal.
 const TIER_THEME: Record<
-  User["tier"],
+  InsiderTier,
   { ring: string; chip: string; dot: string; glow: string }
 > = {
-  "Saga Gold": {
+  Ambassador: {
     ring: "ring-bluelagoon-golden/60",
     chip: "border-bluelagoon-golden/40 bg-bluelagoon-golden/15 text-bluelagoon-golden",
     dot: "bg-bluelagoon-golden",
     glow: "from-bluelagoon-golden/25",
   },
-  "Saga Silver": {
+  Insider: {
     ring: "ring-bluelagoon-crisp/60",
     chip: "border-bluelagoon-crisp/40 bg-bluelagoon-crisp/10 text-bluelagoon-crisp",
     dot: "bg-bluelagoon-crisp",
     glow: "from-bluelagoon-crisp/20",
   },
-  "Saga Platinum": {
+  Patron: {
     ring: "ring-bluelagoon-lilac/60",
     chip: "border-bluelagoon-lilac/40 bg-bluelagoon-lilac/10 text-bluelagoon-lilac",
     dot: "bg-bluelagoon-lilac",
     glow: "from-bluelagoon-lilac/25",
   },
-  "Saga Club": {
+  "Insider Friend": {
     ring: "ring-bluelagoon-aurora/60",
     chip: "border-bluelagoon-aurora/40 bg-bluelagoon-aurora/10 text-bluelagoon-aurora",
     dot: "bg-bluelagoon-aurora",
@@ -67,25 +82,29 @@ export function UserMenu() {
   // Load on mount.
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      let raw = localStorage.getItem(STORAGE_KEY);
+      // Pull-forward from any legacy key, then drop it.
+      if (!raw) {
+        for (const legacy of LEGACY_STORAGE_KEYS) {
+          const legacyRaw = localStorage.getItem(legacy);
+          if (legacyRaw) {
+            raw = legacyRaw;
+          }
+          localStorage.removeItem(legacy);
+        }
+      }
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<User>;
-        // Migrate older shapes that lack the new fields.
-        if (
-          parsed.name &&
-          (parsed.photoUrl === undefined ||
-            parsed.sagaPoints === undefined ||
-            parsed.tierCredits === undefined)
-        ) {
-          const upgraded: User = { ...DEMO_USER, ...parsed } as User;
-          upgraded.photoUrl = DEMO_USER.photoUrl;
-          upgraded.sagaPoints = DEMO_USER.sagaPoints;
-          upgraded.tierCredits = DEMO_USER.tierCredits;
-          setUser(upgraded);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(upgraded));
-        } else {
-          setUser(parsed as User);
-        }
+        // Identity fields (name, initials, photo, tier, member number) are
+        // canonical from DEMO_USER — the localStorage entry just signals
+        // "signed in". Only points / YTD spend are user-mutable.
+        const refreshed: User = {
+          ...DEMO_USER,
+          points: parsed.points ?? DEMO_USER.points,
+          ytdEUR: parsed.ytdEUR ?? DEMO_USER.ytdEUR,
+        };
+        setUser(refreshed);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(refreshed));
       }
     } catch {
       // ignore
@@ -198,7 +217,6 @@ export function UserMenu() {
               user.initials
             )}
           </span>
-          <span className="hidden md:inline">{user.name.split(" ")[0]}</span>
           <svg
             className={`hidden text-bluelagoon-muted transition md:inline ${
               open ? "rotate-180" : ""
@@ -252,7 +270,7 @@ export function UserMenu() {
                     {user.name}
                   </p>
                   <p className="font-mono text-[11px] tracking-[0.12em] text-bluelagoon-muted">
-                    {user.sagaNumber}
+                    {user.memberNumber}
                   </p>
                 </div>
               </div>
@@ -269,21 +287,27 @@ export function UserMenu() {
               <div className="relative mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-bluelagoon-line bg-bluelagoon-line">
                 <div className="bg-bluelagoon-paper px-3 py-2.5">
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-bluelagoon-muted">
-                    Saga Points
+                    Lagoon points
                   </p>
                   <p className="mt-0.5 text-base font-semibold tabular-nums text-bluelagoon-midnight">
-                    {user.sagaPoints.toLocaleString("en-US")}
+                    {user.points.toLocaleString("en-US")}
                   </p>
                 </div>
                 <div className="bg-bluelagoon-paper px-3 py-2.5">
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-bluelagoon-muted">
-                    Tier Credits
+                    YTD spend
                   </p>
                   <p className="mt-0.5 text-base font-semibold tabular-nums text-bluelagoon-midnight">
-                    {user.tierCredits.toLocaleString("en-US")}
+                    €{user.ytdEUR.toLocaleString("en-US")}
                   </p>
                 </div>
               </div>
+
+              {user.nextTier && user.toNextTierEUR > 0 && (
+                <p className="relative mt-3 text-[11px] text-bluelagoon-muted">
+                  €{user.toNextTierEUR.toLocaleString("en-US")} to {user.nextTier}
+                </p>
+              )}
             </div>
 
             <ul className="py-1.5 text-sm">
@@ -305,10 +329,10 @@ export function UserMenu() {
                     aria-hidden
                     className="flex-none text-bluelagoon-muted transition group-hover:text-bluelagoon-midnight"
                   >
-                    <path d="M12 3l1.8 4.6L18.5 9.5l-4.7 1.9L12 16l-1.8-4.6L5.5 9.5l4.7-1.9z" />
-                    <path d="M19 14l.7 1.8L21.5 16.5l-1.8.7L19 19l-.7-1.8L16.5 16.5l1.8-.7z" />
+                    <path d="M12 2L2 9l10 13 10-13z" />
+                    <path d="M2 9h20" />
                   </svg>
-                  <span className="flex-1">Saga Club</span>
+                  <span className="flex-1">Insider hub</span>
                   <svg
                     width="14"
                     height="14"
@@ -343,11 +367,11 @@ export function UserMenu() {
                     aria-hidden
                     className="flex-none text-bluelagoon-muted transition group-hover:text-bluelagoon-midnight"
                   >
-                    <rect x="4" y="7" width="16" height="13" rx="2" />
-                    <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
-                    <path d="M4 13h16" />
+                    <rect x="3" y="4" width="18" height="17" rx="2" />
+                    <path d="M8 2v4M16 2v4" />
+                    <path d="M3 9h18" />
                   </svg>
-                  <span className="flex-1">My trips</span>
+                  <span className="flex-1">My visits</span>
                   <svg
                     width="14"
                     height="14"
@@ -382,10 +406,10 @@ export function UserMenu() {
                     aria-hidden
                     className="flex-none text-bluelagoon-muted transition group-hover:text-bluelagoon-midnight"
                   >
-                    <path d="M22 2L11 13" />
-                    <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+                    <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z" />
+                    <circle cx="12" cy="9" r="2.5" />
                   </svg>
-                  <span className="flex-1">Flight status</span>
+                  <span className="flex-1">Today at the lagoon</span>
                   <svg
                     width="14"
                     height="14"
@@ -420,10 +444,9 @@ export function UserMenu() {
                     aria-hidden
                     className="flex-none text-bluelagoon-muted transition group-hover:text-bluelagoon-midnight"
                   >
-                    <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
-                    <path d="M14 2v6h6" />
-                    <path d="M8 13h8" />
-                    <path d="M8 17h5" />
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <path d="M2 10h20" />
+                    <path d="M6 15h3M15 15h3" />
                   </svg>
                   <span className="flex-1">Transactions</span>
                   <svg

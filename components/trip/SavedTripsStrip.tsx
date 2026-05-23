@@ -29,7 +29,7 @@ export function SavedTripsStrip() {
   return (
     <section className="flex flex-none flex-col gap-2">
       <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bluelagoon-muted">
-        Saved trip ideas
+        Saved visits
       </p>
       <div className="flex gap-3 overflow-x-auto pb-1">
         {ideas.map((idea) => (

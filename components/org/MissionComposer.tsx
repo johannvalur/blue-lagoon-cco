@@ -34,7 +34,7 @@ export function MissionComposer({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            Mission control · ask the org
+            Mission control · ask the resort
           </p>
           <h2 className="mt-1 font-loft text-lg font-bold text-bluelagoon-midnight">
             Give the network a mission. Watch the agents work. You decide.
@@ -57,7 +57,7 @@ export function MissionComposer({
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={2}
-          placeholder="e.g. TF-FIA APU bearing wear is trending — plan the swap before it grounds the aircraft."
+          placeholder="e.g. Pump 2 of the silica filtration cycle is showing elevated vibration — plan the swap before it stops during peak."
           className="w-full resize-none rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-sm text-bluelagoon-ink placeholder-bluelagoon-muted/80 outline-none transition focus:border-bluelagoon-midnight focus:ring-2 focus:ring-bluelagoon-midnight/15"
           disabled={isStreaming || isPaused}
         />

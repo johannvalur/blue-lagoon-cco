@@ -52,12 +52,13 @@ export function OrgExplorer({ chart, metrics }: OrgExplorerProps) {
           Organization · live
         </p>
         <h1 className="mt-2 font-loft text-4xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-5xl">
-          The airline, agent by agent.
+          Blue Lagoon, agent by agent.
         </h1>
         <p className="mt-3 max-w-2xl text-bluelagoon-ink/85">
-          Nine departments, dozens of agents, working in parallel. Some are AI,
-          some are humans-in-the-loop, some are humans owning the call. AI
-          proposes; humans dispose.
+          Seven departments, dozens of agents, working in parallel — from the
+          lagoon floor to the geothermal pumps. Some are AI, some are
+          humans-in-the-loop, some are humans owning the call. AI proposes;
+          humans dispose.
         </p>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">

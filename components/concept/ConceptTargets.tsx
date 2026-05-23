@@ -7,28 +7,28 @@ interface Target {
 
 const TARGETS: Target[] = [
   {
-    category: "Customer",
+    category: "Guest",
     value: "+20",
     detail: "NPS point swing",
-    horizon: "within 24 months",
+    horizon: "within 18 months",
   },
   {
     category: "Operations",
     value: "−30%",
-    detail: "IROPS recovery time",
-    horizon: "within 18 months",
+    detail: "Disruption-to-stable-plan time",
+    horizon: "within 12 months",
   },
   {
     category: "Commercial",
-    value: "+10%",
-    detail: "RASK lift",
-    horizon: "within 24 months",
+    value: "+12%",
+    detail: "Ancillary revenue per guest",
+    horizon: "within 18 months",
   },
   {
     category: "Internal",
     value: "+15",
     detail: "Employee NPS swing",
-    horizon: "within 18 months",
+    horizon: "within 12 months",
   },
 ];
 

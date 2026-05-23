@@ -1,12 +1,10 @@
-import Image from "next/image";
-
 interface BrandMarkProps {
   height?: number;
   variant?: "navy" | "white";
   className?: string;
 }
 
-const LOGO_RATIO = 1000 / 447;
+const LOGO_RATIO = 481 / 85.79;
 
 export function BrandMark({
   height = 32,
@@ -14,16 +12,26 @@ export function BrandMark({
   className,
 }: BrandMarkProps) {
   const width = Math.round(LOGO_RATIO * height);
-  const filter = variant === "white" ? "brightness(0) invert(1)" : undefined;
+  const color =
+    variant === "white" ? "#ffffff" : "var(--color-bluelagoon-midnight)";
   return (
-    <Image
-      src="/bluelagoon-logo.png"
-      alt="Blue Lagoon"
-      width={width}
-      height={height}
-      priority
-      className={className}
-      style={filter ? { filter } : undefined}
+    <span
+      role="img"
+      aria-label="Blue Lagoon"
+      className={`inline-block ${className ?? ""}`}
+      style={{
+        width,
+        height,
+        backgroundColor: color,
+        WebkitMaskImage: "url(/bluelagoon-logo.svg)",
+        maskImage: "url(/bluelagoon-logo.svg)",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+      }}
     />
   );
 }

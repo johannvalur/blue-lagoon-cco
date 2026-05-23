@@ -2,50 +2,36 @@
 
 import { useMemo, useState } from "react";
 import { StatusChat } from "@/components/StatusChat";
-import { SCENARIO } from "@/lib/data/internal/opsScenario";
-import type { DisruptedFlight } from "@/lib/data/internal/opsScenario";
+import {
+  BOOKED_VISIT,
+  MAINTENANCE_DISRUPTION,
+} from "@/lib/data/customer/tripScenario";
 
 type LookupResult =
-  | { kind: "delayed"; flight: DisruptedFlight; newEtd: string }
-  | { kind: "ontime"; flightNumber: string }
-  | { kind: "unknown"; flightNumber: string }
+  | { kind: "affected"; ref: string }
+  | { kind: "ontime"; ref: string }
+  | { kind: "unknown"; ref: string }
   | { kind: "empty" };
 
-// Customer-facing recovery times for the fog event. These mirror what the
-// status agent uses in the system prompt so the UI card and the chat agree.
-const FOG_RECOVERY_ETD: Record<string, string> = {
-  FI631: "0925z",
-  FI617: "0950z",
-  FI603: "1005z",
-  FI609: "1030z",
-};
-
-function normaliseFlightNumber(raw: string): string {
-  const trimmed = raw.trim().toUpperCase().replace(/\s+/g, "");
-  // Accept "FI631", "fi 631", or "631" — coerce to the FI### form.
-  if (/^\d+$/.test(trimmed)) return `FI${trimmed}`;
-  return trimmed;
+function normaliseRef(raw: string): string {
+  return raw.trim().toUpperCase().replace(/\s+/g, "");
 }
 
-function lookup(rawFlight: string): LookupResult {
-  if (!rawFlight.trim()) return { kind: "empty" };
-  const flightNumber = normaliseFlightNumber(rawFlight);
+function lookup(rawRef: string): LookupResult {
+  if (!rawRef.trim()) return { kind: "empty" };
+  const ref = normaliseRef(rawRef);
 
-  const hit = SCENARIO.disruptedFlights.find((f) => f.flight === flightNumber);
-  if (hit) {
-    return {
-      kind: "delayed",
-      flight: hit,
-      newEtd: FOG_RECOVERY_ETD[hit.flight] ?? "TBC",
-    };
+  if (ref === BOOKED_VISIT.ref) {
+    return { kind: "affected", ref };
   }
 
-  // FI followed by digits — looks like a real Blue Lagoon flight; default to on time.
-  if (/^FI\d{2,4}$/.test(flightNumber)) {
-    return { kind: "ontime", flightNumber };
+  // BL followed by alphanumerics — looks like a real reservation ref; default
+  // to "on time" (unaffected by today's maintenance).
+  if (/^BL[0-9A-Z]{4,10}$/.test(ref)) {
+    return { kind: "ontime", ref };
   }
 
-  return { kind: "unknown", flightNumber };
+  return { kind: "unknown", ref };
 }
 
 function todayIso(): string {
@@ -53,42 +39,41 @@ function todayIso(): string {
 }
 
 export default function StatusPage() {
-  const [flightInput, setFlightInput] = useState("");
+  const [refInput, setRefInput] = useState("");
   const [dateInput, setDateInput] = useState(todayIso());
   const [submitted, setSubmitted] = useState<{
-    flight: string;
+    ref: string;
     date: string;
   } | null>(null);
 
   const result = useMemo<LookupResult>(() => {
     if (!submitted) return { kind: "empty" };
-    return lookup(submitted.flight);
+    return lookup(submitted.ref);
   }, [submitted]);
 
   const seedContext = useMemo<string | undefined>(() => {
     if (!submitted) return undefined;
-    if (result.kind === "delayed") {
-      const f = result.flight;
-      return `Context for this conversation: I just looked up flight ${f.flight} (${f.origin}→${f.destination}) for ${submitted.date}. The status page is showing me it's delayed — scheduled ${f.schedDep}, projected new ETD ${result.newEtd}. Please answer my next question with that flight in mind.`;
+    if (result.kind === "affected") {
+      return `Context for this conversation: I just looked up reservation ${result.ref} for ${submitted.date}. The status page is showing me my ${BOOKED_VISIT.arrivalWindow} arrival is affected by ${MAINTENANCE_DISRUPTION.cause.toLowerCase()} — outdoor lagoon capacity reduced 30% from ${MAINTENANCE_DISRUPTION.windowStart} to ${MAINTENANCE_DISRUPTION.windowEnd}. Please answer my next question with that reservation in mind.`;
     }
     if (result.kind === "ontime") {
-      return `Context for this conversation: I just looked up flight ${result.flightNumber} for ${submitted.date}. The status page is showing it as on time. Please answer my next question with that flight in mind.`;
+      return `Context for this conversation: I just looked up reservation ${result.ref} for ${submitted.date}. The status page is showing it as unaffected. Please answer my next question with that reservation in mind.`;
     }
     if (result.kind === "unknown") {
-      return `Context for this conversation: I tried to look up "${submitted.flight}" for ${submitted.date}, but the status page didn't recognise the flight number.`;
+      return `Context for this conversation: I tried to look up "${submitted.ref}" for ${submitted.date}, but the status page didn't recognise the reservation reference.`;
     }
     return undefined;
   }, [result, submitted]);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!flightInput.trim()) return;
-    setSubmitted({ flight: flightInput, date: dateInput });
+    if (!refInput.trim()) return;
+    setSubmitted({ ref: refInput, date: dateInput });
   }
 
   function onClear() {
     setSubmitted(null);
-    setFlightInput("");
+    setRefInput("");
   }
 
   return (
@@ -96,16 +81,20 @@ export default function StatusPage() {
       <div className="space-y-8">
         <section>
           <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            <span className="text-bluelagoon-midnight">Customer journey</span>
-            <span className="text-bluelagoon-line"> · </span>flight status
+            <span className="text-bluelagoon-midnight">Guest journey</span>
+            <span className="text-bluelagoon-line"> · </span>visit status
           </p>
           <h1 className="mt-1 font-loft text-3xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-4xl">
-            How&rsquo;s my flight?
+            How&rsquo;s my visit?
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-bluelagoon-ink/85">
-            Look up your flight to see live status and your options. The same
-            agent that helps the ops desk recover from the disruption is the
-            one answering you here — just from the other side of the desk.
+            Look up your reservation to see whether today&rsquo;s maintenance
+            event touches it, and what your options are. The same concierge
+            that&rsquo;s working with the facility ops team answers you here —
+            just from the other side of the conversation.
+          </p>
+          <p className="mt-2 text-xs text-bluelagoon-muted">
+            Try reservation <span className="font-mono">{BOOKED_VISIT.ref}</span>.
           </p>
         </section>
 
@@ -116,16 +105,16 @@ export default function StatusPage() {
           >
             <div className="flex-1">
               <label
-                htmlFor="status-flight"
+                htmlFor="status-ref"
                 className="block text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted"
               >
-                Flight number
+                Reservation reference
               </label>
               <input
-                id="status-flight"
-                value={flightInput}
-                onChange={(e) => setFlightInput(e.target.value)}
-                placeholder="e.g. FI631"
+                id="status-ref"
+                value={refInput}
+                onChange={(e) => setRefInput(e.target.value)}
+                placeholder="e.g. BL2X4F8K"
                 autoComplete="off"
                 spellCheck={false}
                 className="mt-1 w-full rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-3 text-sm text-bluelagoon-ink placeholder-bluelagoon-muted/80 outline-none transition focus:border-bluelagoon-midnight focus:ring-2 focus:ring-bluelagoon-midnight/15"
@@ -136,7 +125,7 @@ export default function StatusPage() {
                 htmlFor="status-date"
                 className="block text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted"
               >
-                Date
+                Visit date
               </label>
               <input
                 id="status-date"
@@ -172,27 +161,27 @@ export default function StatusPage() {
 
         <section>
           <h2 className="mb-3 font-loft text-lg font-bold text-bluelagoon-midnight">
-            Ask anything about your flight
+            Ask anything about your visit
           </h2>
           <StatusChat
             seedContext={seedContext}
             greeting={
-              result.kind === "delayed"
-                ? `Yes — ${result.flight.flight} ${result.flight.origin}→${result.flight.destination} is delayed today. New projected departure ${result.newEtd}, due to dense fog at KEF. Want me to walk through your options?`
-                : "Hi — what's your flight number? I'll pull the latest status and walk you through your options."
+              result.kind === "affected"
+                ? `Yes — your ${BOOKED_VISIT.arrivalWindow} arrival today is in the maintenance window. ${MAINTENANCE_DISRUPTION.capacityImpact} from ${MAINTENANCE_DISRUPTION.windowStart}–${MAINTENANCE_DISRUPTION.windowEnd}, indoor warm pool and Spa Restaurant unaffected. Want me to walk through your options?`
+                : "Hi — what's your reservation reference? I'll check whether today's maintenance window touches your visit and walk you through your options."
             }
             starters={
-              result.kind === "delayed"
+              result.kind === "affected"
                 ? [
-                    `What are my options for ${result.flight.flight}?`,
-                    "Am I owed compensation under EU261?",
-                    "Can I get rebooked on a later flight today?",
-                    "Do I get a hotel and meals if I miss my connection?",
+                    "What are my options if I keep 15:00?",
+                    "Shift earlier to 13:00 — what changes?",
+                    "If I move to 19:00, do I keep my Silica room?",
+                    "What's the Signature upgrade you mentioned?",
                   ]
                 : [
-                    "Is my flight delayed today?",
-                    "What happens if my flight is cancelled?",
-                    "What are my rights under EU261?",
+                    "Is my visit affected today?",
+                    "What happens if the lagoon is closed?",
+                    "Can I reschedule for free if the spa is short-staffed?",
                   ]
             }
           />
@@ -205,25 +194,24 @@ export default function StatusPage() {
 function StatusCard({ result }: { result: LookupResult }) {
   if (result.kind === "empty") return null;
 
-  if (result.kind === "delayed") {
-    const f = result.flight;
+  if (result.kind === "affected") {
     return (
       <div className="rounded-2xl border border-bluelagoon-fiery/40 bg-bluelagoon-fiery/5 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="rounded-full bg-bluelagoon-fiery px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-snow">
-                Delayed
+                Affected
               </span>
               <span className="font-loft text-xl font-bold text-bluelagoon-midnight">
-                {f.flight}
+                {result.ref}
               </span>
               <span className="text-sm text-bluelagoon-muted">
-                {f.type} · {f.registration}
+                {BOOKED_VISIT.tier} · {BOOKED_VISIT.hotelName}
               </span>
             </div>
             <p className="mt-2 font-loft text-2xl font-bold text-bluelagoon-midnight">
-              {f.origin} → {f.destination}
+              Arrival window {BOOKED_VISIT.arrivalWindow}
             </p>
           </div>
         </div>
@@ -231,35 +219,37 @@ function StatusCard({ result }: { result: LookupResult }) {
         <dl className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-3">
           <div>
             <dt className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-              Scheduled departure
+              Maintenance window
             </dt>
-            <dd className="mt-1 font-mono text-bluelagoon-ink line-through decoration-bluelagoon-muted/60">
-              {f.schedDep}
+            <dd className="mt-1 font-mono text-bluelagoon-ink">
+              {MAINTENANCE_DISRUPTION.windowStart}–
+              {MAINTENANCE_DISRUPTION.windowEnd}
             </dd>
           </div>
           <div>
             <dt className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-              New ETD
+              Capacity impact
             </dt>
-            <dd className="mt-1 font-mono font-semibold text-bluelagoon-fiery">
-              {result.newEtd}
+            <dd className="mt-1 font-semibold text-bluelagoon-fiery">
+              {MAINTENANCE_DISRUPTION.capacityImpact}
             </dd>
           </div>
           <div className="col-span-2 sm:col-span-1">
             <dt className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-              Reason
+              Cause
             </dt>
             <dd className="mt-1 text-bluelagoon-ink">
-              Dense fog at KEF, clearing by 0820z
+              {MAINTENANCE_DISRUPTION.cause}, restored by{" "}
+              {MAINTENANCE_DISRUPTION.windowEnd}.
             </dd>
           </div>
         </dl>
 
         <p className="mt-4 text-xs text-bluelagoon-muted">
-          Weather-driven delays are treated as extraordinary circumstances
-          under EU261 — care obligations (meals, hotel, rebooking) apply, cash
-          compensation generally does not. Ask below for the specifics on
-          your situation.
+          Indoor warm pool, Spa Restaurant, and hotel rooms are unaffected.
+          Outdoor capacity returns by 18:30. We can shift you earlier or later
+          at no charge, upgrade you to keep your time, or reschedule the whole
+          visit — ask below for the version that fits you.
         </p>
       </div>
     );
@@ -270,15 +260,16 @@ function StatusCard({ result }: { result: LookupResult }) {
       <div className="rounded-2xl border border-bluelagoon-line bg-bluelagoon-paper p-5">
         <div className="flex items-center gap-2">
           <span className="rounded-full bg-bluelagoon-volcanic px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-midnight">
-            On time
+            Unaffected
           </span>
           <span className="font-loft text-xl font-bold text-bluelagoon-midnight">
-            {result.flightNumber}
+            {result.ref}
           </span>
         </div>
         <p className="mt-2 text-sm text-bluelagoon-ink/85">
-          As far as we can see, {result.flightNumber} is operating on time.
-          We&rsquo;ll surface anything that changes here.
+          As far as we can see, reservation {result.ref} is unaffected by
+          today&rsquo;s maintenance window. We&rsquo;ll surface anything that
+          changes here.
         </p>
       </div>
     );
@@ -292,12 +283,12 @@ function StatusCard({ result }: { result: LookupResult }) {
           No info
         </span>
         <span className="font-loft text-xl font-bold text-bluelagoon-midnight">
-          {result.flightNumber}
+          {result.ref}
         </span>
       </div>
       <p className="mt-2 text-sm text-bluelagoon-ink/85">
-        We don&rsquo;t have info on that flight. Double-check the number, or
-        ask the agent below — they can help track it down.
+        We don&rsquo;t have a record of that reservation. Double-check the
+        reference, or ask the concierge below — they can help track it down.
       </p>
     </div>
   );

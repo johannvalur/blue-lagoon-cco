@@ -83,7 +83,7 @@ export function makeActivateAgentTool(
         thinking: {
           type: "string",
           description:
-            "One or two short sentences in the agent's voice. Distinct per agent — Dispatch Copilot is terse and numeric; Service Recovery is warm; Lead Engineer is cautious.",
+            "One or two short sentences in the agent's voice. Distinct per agent — Predictive Maintenance is sensor-driven and numeric; Concierge is warm; Lead Engineer is cautious.",
         },
         proposedAction: {
           type: "string",

@@ -12,6 +12,13 @@ interface TripIdeaCardProps {
   readOnly?: boolean;
 }
 
+const TIER_LABEL: Record<string, string> = {
+  comfort: "Comfort",
+  premium: "Premium",
+  signature: "Signature",
+  "retreat-spa": "Retreat Spa",
+};
+
 export function TripIdeaCard({
   result,
   idea: ideaProp,
@@ -60,7 +67,7 @@ export function TripIdeaCard({
   return (
     <div className="surface-card rounded-2xl border-l-4 border-l-bluelagoon-bright p-6">
       <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-bright">
-        Trip idea {readOnly ? "· shared" : "· saved"}
+        Visit idea {readOnly ? "· shared" : "· saved"}
       </p>
       <h2 className="mt-1 font-loft text-2xl font-bold text-bluelagoon-midnight">
         {idea.title}
@@ -72,24 +79,27 @@ export function TripIdeaCard({
       {idea.legs.length > 0 && (
         <div className="mt-4">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            Legs
+            Plan
           </p>
           <ol className="mt-2 flex flex-wrap items-center gap-2 text-sm text-bluelagoon-ink">
-            {idea.legs.map((leg, idx) => (
-              <li key={idx} className="flex items-center gap-2">
-                {idx > 0 && (
-                  <span className="text-bluelagoon-muted">→</span>
-                )}
-                <span className="rounded-full bg-bluelagoon-mist/60 px-2.5 py-1 font-mono text-xs">
-                  {leg.origin}→{leg.iata}
-                </span>
-                {leg.departDate ? (
-                  <span className="text-xs text-bluelagoon-muted">
-                    {leg.departDate}
+            {idea.legs.map((leg, idx) => {
+              const tierLabel = TIER_LABEL[leg.iata.toLowerCase()] ?? leg.iata;
+              return (
+                <li key={idx} className="flex items-center gap-2">
+                  {idx > 0 && (
+                    <span className="text-bluelagoon-muted">·</span>
+                  )}
+                  <span className="rounded-full bg-bluelagoon-mist/60 px-2.5 py-1 text-xs">
+                    {tierLabel}
                   </span>
-                ) : null}
-              </li>
-            ))}
+                  {leg.departDate ? (
+                    <span className="text-xs text-bluelagoon-muted">
+                      {leg.departDate}
+                    </span>
+                  ) : null}
+                </li>
+              );
+            })}
           </ol>
         </div>
       )}
@@ -99,36 +109,37 @@ export function TripIdeaCard({
         idea.packages.length > 0) && (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {idea.hotels.length > 0 && (
-            <Section title="Hotels">
+            <Section title="Stay">
               {idea.hotels.map((h) => (
                 <div key={h.id} className="text-sm text-bluelagoon-ink">
                   <div className="font-semibold">{h.name}</div>
                   <div className="text-xs text-bluelagoon-muted">
-                    {h.nights} nights · €{h.pricePerNightEUR}/night
+                    {h.nights} night{h.nights === 1 ? "" : "s"} · from €
+                    {h.pricePerNightEUR}/night
                   </div>
                 </div>
               ))}
             </Section>
           )}
           {idea.cars.length > 0 && (
-            <Section title="Cars">
+            <Section title="Transfer">
               {idea.cars.map((c) => (
                 <div key={c.id} className="text-sm text-bluelagoon-ink">
                   <div className="font-semibold">{c.name}</div>
                   <div className="text-xs text-bluelagoon-muted">
-                    {c.days} days · €{c.pricePerDayEUR}/day
+                    €{c.pricePerDayEUR}
                   </div>
                 </div>
               ))}
             </Section>
           )}
           {idea.packages.length > 0 && (
-            <Section title="Packages">
+            <Section title="Package">
               {idea.packages.map((p) => (
                 <div key={p.id} className="text-sm text-bluelagoon-ink">
                   <div className="font-semibold">{p.name}</div>
                   <div className="text-xs text-bluelagoon-muted">
-                    from €{p.priceFromEURPerPerson} pp
+                    €{p.priceFromEURPerPerson} pp
                   </div>
                 </div>
               ))}
@@ -140,7 +151,7 @@ export function TripIdeaCard({
       <div className="mt-5 flex items-end justify-between border-t border-bluelagoon-line pt-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            {idea.travelers} traveller{idea.travelers === 1 ? "" : "s"}
+            {idea.travelers} guest{idea.travelers === 1 ? "" : "s"}
           </p>
           {totalEstimate ? (
             <p className="font-loft text-2xl font-bold text-bluelagoon-midnight">
@@ -178,17 +189,17 @@ export function TripIdeaCard({
 
         {readOnly && (
           <Link
-            href={`/customer?q=${encodeURIComponent(`Plan a trip like this: ${idea.title}. ${idea.summary}`)}`}
+            href={`/customer?q=${encodeURIComponent(`Plan a visit like this: ${idea.title}. ${idea.summary}`)}`}
             className="btn-primary rounded-xl px-4 py-2 text-sm font-semibold"
           >
-            Plan a trip like this
+            Plan a visit like this
           </Link>
         )}
       </div>
 
       {!readOnly && (
         <p className="mt-3 text-xs text-bluelagoon-muted">
-          Demo trip idea — saved in this browser, no account required.
+          Demo visit idea — saved in this browser, no account required.
         </p>
       )}
     </div>

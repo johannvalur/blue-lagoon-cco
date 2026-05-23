@@ -9,12 +9,12 @@ export default function InternalHome() {
             Internal tooling · live
           </p>
           <h1 className="mt-2 font-loft text-4xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-5xl">
-            For the airline.
+            For the facility.
           </h1>
           <p className="mt-3 max-w-2xl text-bluelagoon-ink/85">
-            Two prototypes for the people who keep Blue Lagoon flying — ops
-            controllers and dispatch on one side, cabin and flight crew on the
-            other. Humans approve, AI proposes.
+            Two prototypes for the people who keep Blue Lagoon running —
+            facility ops on one side, the spa floor team on the other. Humans
+            approve, AI proposes.
           </p>
         </section>
 
@@ -28,11 +28,11 @@ export default function InternalHome() {
           />
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-              Organization · live
+              Organisation · live
             </p>
             <p className="mt-0.5 text-sm font-medium text-bluelagoon-ink/90 sm:text-base">
-              The airline, agent by agent — nine departments working in
-              parallel.
+              Blue Lagoon, department by department — every team mapped to the
+              guest moment it owns.
             </p>
           </div>
           <span className="flex-none text-sm font-semibold text-bluelagoon-midnight transition group-hover:translate-x-0.5">
@@ -46,12 +46,12 @@ export default function InternalHome() {
             className="surface-card surface-card-hover rounded-2xl border-l-4 border-l-bluelagoon-golden p-6 transition"
           >
             <h2 className="font-loft text-xl font-bold text-bluelagoon-midnight">
-              Operations Control Center
+              Facility ops
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-bluelagoon-ink/85">
-              Reasoning on top of network ops control. Ranked recovery options
-              with explicit tradeoffs — crew duty hours, slots, EU261 — all in
-              scope.
+              Reasoning on top of the live facility picture. Ranked recovery
+              options for capacity events — therapist rosters, treatment-room
+              moves, hotel overnights, shuttle slots — all in scope.
             </p>
             <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-bluelagoon-midnight">
               Open →
@@ -63,12 +63,12 @@ export default function InternalHome() {
             className="surface-card surface-card-hover rounded-2xl border-l-4 border-l-bluelagoon-fiery p-6 transition"
           >
             <h2 className="font-loft text-xl font-bold text-bluelagoon-midnight">
-              Crew copilot
+              Spa floor copilot
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-bluelagoon-ink/85">
-              Procedural Q&amp;A grounded in a synthetic Blue Lagoon OM-A
-              excerpt. Cites the section it's pulling from. Says &ldquo;I don't
-              know&rdquo; when it doesn't.
+              Procedural Q&amp;A grounded in a synthetic Blue Lagoon SOP
+              excerpt. Cites the section it&rsquo;s pulling from. Says
+              &ldquo;I don&rsquo;t know&rdquo; when it doesn&rsquo;t.
             </p>
             <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-bluelagoon-midnight">
               Open →

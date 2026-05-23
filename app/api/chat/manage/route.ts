@@ -3,9 +3,9 @@ import { getAnthropic, MODEL_OPUS } from "@/lib/anthropic";
 import { MANAGE_SYSTEM_PROMPT } from "@/lib/prompts/customer/manage";
 import {
   makeChangeDatesTool,
-  makeCancelBookingTool,
+  makeCancelReservationTool,
   type ChangeDatesResult,
-  type CancelBookingResult,
+  type CancelReservationResult,
   type ManageContext,
 } from "@/lib/tools/manageTools";
 
@@ -35,8 +35,8 @@ export async function POST(req: NextRequest) {
   if (!Array.isArray(body.messages) || body.messages.length === 0) {
     return jsonError("messages must be a non-empty array.", 400);
   }
-  if (!body.context || !body.context.ref || !body.context.fareClass) {
-    return jsonError("context with ref and fareClass is required.", 400);
+  if (!body.context || !body.context.ref || !body.context.tier) {
+    return jsonError("context with ref and tier is required.", 400);
   }
 
   let client;
@@ -106,10 +106,12 @@ interface RunArgs {
 
 async function runManageToolLoop({ client, messages, ctx, send }: RunArgs) {
   const changeQueue: ChangeDatesResult[] = [];
-  const cancelQueue: CancelBookingResult[] = [];
+  const cancelQueue: CancelReservationResult[] = [];
 
   const changeDates = makeChangeDatesTool(ctx, (r) => changeQueue.push(r));
-  const cancelBooking = makeCancelBookingTool(ctx, (r) => cancelQueue.push(r));
+  const cancelReservation = makeCancelReservationTool(ctx, (r) =>
+    cancelQueue.push(r),
+  );
 
   const runner = client.beta.messages.toolRunner({
     model: MODEL_OPUS,
@@ -122,7 +124,7 @@ async function runManageToolLoop({ client, messages, ctx, send }: RunArgs) {
       },
     ],
     messages,
-    tools: [changeDates, cancelBooking],
+    tools: [changeDates, cancelReservation],
     ...{ output_config: { effort: EFFORT } },
     stream: true,
   });
@@ -184,10 +186,10 @@ async function runManageToolLoop({ client, messages, ctx, send }: RunArgs) {
       }
 
       for (const tu of pendingToolUses) {
-        let result: ChangeDatesResult | CancelBookingResult | undefined;
+        let result: ChangeDatesResult | CancelReservationResult | undefined;
         if (tu.name === "change_dates") {
           result = changeQueue.shift();
-        } else if (tu.name === "cancel_booking") {
+        } else if (tu.name === "cancel_reservation") {
           result = cancelQueue.shift();
         }
         if (result) {

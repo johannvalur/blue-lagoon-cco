@@ -7,68 +7,49 @@ interface BoardingPassProps {
   passengerName: string;
 }
 
-// Deterministic flight number from the destination IATA — keeps it stable
-// across renders and gives every IATA a unique-looking FI number.
-function flightNumberFor(iata: string): string {
-  // Hard-coded for the marquee long-haul gateways for nicer optics.
-  const tweaked: Record<string, string> = {
-    JFK: "FI615",
-    BOS: "FI631",
-    SEA: "FI681",
-    DEN: "FI671",
-    YYZ: "FI603",
-    LIS: "FI540",
-    MAD: "FI530",
-    BCN: "FI542",
-    TFS: "FI572",
-    CDG: "FI542",
-    LHR: "FI452",
-    BER: "FI520",
-    AMS: "FI500",
-    CPH: "FI206",
-    AEY: "FI121",
-    KEF: "FI001",
-  };
-  if (tweaked[iata]) return tweaked[iata];
+// Deterministic arrival window from the trip ref — keeps it stable across
+// renders. Maps the ref's hash onto an opening hour between 11:00 and 19:00
+// in 30-minute slots. The canonical demo reservation BL2X4F8K is pinned at
+// 15:00 (the disruption window).
+function arrivalWindowFor(ref: string): string {
+  if (ref === "BL2X4F8K") return "15:00";
   let h = 0;
-  for (let i = 0; i < iata.length; i += 1) {
-    h = (h * 31 + iata.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < ref.length; i += 1) {
+    h = (h * 31 + ref.charCodeAt(i)) >>> 0;
   }
-  return `FI${(100 + (h % 800)).toString()}`;
+  const slot = h % 17; // 17 half-hour slots between 11:00 and 19:00 inclusive
+  const hour = 11 + Math.floor(slot / 2);
+  const minutes = (slot % 2) * 30;
+  const mm = minutes === 0 ? "00" : "30";
+  return `${hour.toString().padStart(2, "0")}:${mm}`;
 }
 
-// Boarding time = 35 minutes before scheduled departure. Departure time is
-// pinned per-route for visual consistency in the demo.
-function scheduleFor(iata: string): { boarding: string; departure: string } {
-  const tweaked: Record<string, { boarding: string; departure: string }> = {
-    JFK: { boarding: "16:25", departure: "17:00" },
-    BOS: { boarding: "16:55", departure: "17:30" },
-    SEA: { boarding: "16:05", departure: "16:40" },
-    DEN: { boarding: "16:35", departure: "17:10" },
-    YYZ: { boarding: "16:45", departure: "17:20" },
-    LIS: { boarding: "07:55", departure: "08:30" },
-    MAD: { boarding: "07:25", departure: "08:00" },
-    BCN: { boarding: "07:15", departure: "07:50" },
-    TFS: { boarding: "06:55", departure: "07:30" },
-    CDG: { boarding: "07:35", departure: "08:10" },
-    LHR: { boarding: "07:45", departure: "08:20" },
-    BER: { boarding: "07:55", departure: "08:30" },
-    AMS: { boarding: "07:25", departure: "08:00" },
-    CPH: { boarding: "07:15", departure: "07:50" },
-    AEY: { boarding: "08:25", departure: "09:00" },
-  };
-  return tweaked[iata] ?? { boarding: "08:25", departure: "09:00" };
+// Map the trips-store FareClass (legacy airline-style labels) onto the
+// spa entry tier shown on the pass.
+function tierFor(fareClass: Trip["fareClass"]): string {
+  switch (fareClass) {
+    case "Light":
+      return "Comfort";
+    case "Standard":
+      return "Premium";
+    case "Flex":
+      return "Signature";
+    case "Saga":
+      return "Retreat Spa";
+    default:
+      return "Premium";
+  }
 }
 
-// Origin city is always Reykjavík for a KEF-based demo.
-const ORIGIN = { iata: "KEF", city: "Reykjavík" };
-
-// Pre-computed barcode bar widths — random-ish but stable, rendered as a
-// row of <div>s instead of a real barcode image.
-const BARCODE_BARS: number[] = [
-  3, 1, 2, 4, 1, 3, 2, 1, 5, 2, 1, 3, 2, 4, 1, 2, 3, 1, 4, 2, 3, 1, 2, 5, 1, 3,
-  2, 4, 1, 2, 3, 1, 2, 4, 1, 3, 2, 1, 4, 2, 3, 1, 5, 2, 1, 3, 2, 1, 4, 3, 1, 2,
-  3, 1, 4, 2, 1, 3, 2, 5, 1, 2, 3, 1, 4, 2, 1, 3, 2, 4, 1, 2,
+// Pre-computed QR-style block pattern — random-ish but stable, rendered as a
+// grid of small squares instead of a real QR image. 12×12 = 144 cells.
+const QR_CELLS: number[] = [
+  1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1,
+  0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0,
+  1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1,
+  0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0,
+  1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0,
+  1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1,
 ];
 
 function formatLongDate(iso: string): string {
@@ -88,13 +69,19 @@ function formatLongDate(iso: string): string {
   return `${weekday}, ${day} ${month} ${year}`;
 }
 
+const LOCATION = {
+  short: "Blue Lagoon",
+  city: "Grindavík, Iceland",
+};
+
 export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
-  const flightNo = flightNumberFor(trip.dest.iata);
-  const { boarding, departure } = scheduleFor(trip.dest.iata);
+  const arrivalWindow = arrivalWindowFor(trip.ref);
+  const tier = tierFor(trip.fareClass);
   const date = formatLongDate(trip.depart);
-  const seat = "14A";
-  const gate = "D7";
-  const zone = "B";
+  // Pinned canonical room for BL2X4F8K; otherwise leave blank — most tiers
+  // don't include a hotel.
+  const hotelRoom = trip.ref === "BL2X4F8K" ? "Silica 207" : "—";
+  const kiosk = "Spa kiosk · main entrance";
 
   return (
     <div className="mx-auto w-full max-w-2xl">
@@ -104,7 +91,7 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-bluelagoon-snow/70">
-                Blue Lagoon · boarding pass
+                Blue Lagoon · arrival pass
               </p>
               <p className="mt-1 font-loft text-lg font-extrabold tracking-tight">
                 {passengerName.toUpperCase()}
@@ -112,10 +99,10 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
             </div>
             <div className="text-right">
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-bluelagoon-snow/70">
-                Flight
+                Tier
               </p>
               <p className="font-loft text-2xl font-extrabold tracking-tight">
-                {flightNo}
+                {tier}
               </p>
             </div>
           </div>
@@ -123,17 +110,19 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
           <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-bluelagoon-aurora via-bluelagoon-crisp to-bluelagoon-fiery" />
         </div>
 
-        {/* Route — big city codes */}
+        {/* Location + arrival window */}
         <div className="bg-bluelagoon-paper px-6 py-6">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-                From
+                Destination
               </p>
-              <p className="mt-1 font-loft text-4xl font-extrabold leading-none tracking-tight text-bluelagoon-midnight">
-                {ORIGIN.iata}
+              <p className="mt-1 font-loft text-3xl font-extrabold leading-none tracking-tight text-bluelagoon-midnight">
+                {LOCATION.short}
               </p>
-              <p className="mt-1 text-sm text-bluelagoon-ink">{ORIGIN.city}</p>
+              <p className="mt-1 text-sm text-bluelagoon-ink">
+                {LOCATION.city}
+              </p>
             </div>
 
             <div className="flex flex-1 items-center justify-center">
@@ -141,7 +130,7 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
                 <div className="h-px w-full bg-bluelagoon-line" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span className="rounded-full bg-bluelagoon-paper px-2 text-bluelagoon-crisp">
-                    <PlaneIcon />
+                    <SpaIcon />
                   </span>
                 </div>
               </div>
@@ -149,14 +138,12 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
 
             <div className="text-right">
               <p className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-                To
+                Arrival window
               </p>
               <p className="mt-1 font-loft text-4xl font-extrabold leading-none tracking-tight text-bluelagoon-midnight">
-                {trip.dest.iata}
+                {arrivalWindow}
               </p>
-              <p className="mt-1 text-sm text-bluelagoon-ink">
-                {trip.dest.city}
-              </p>
+              <p className="mt-1 text-sm text-bluelagoon-ink">local time</p>
             </div>
           </div>
         </div>
@@ -164,23 +151,27 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
         {/* Detail strip */}
         <div className="grid grid-cols-2 gap-px border-y border-bluelagoon-line bg-bluelagoon-line sm:grid-cols-4">
           <DetailCell label="Date" value={date} />
-          <DetailCell label="Departure" value={departure} mono />
-          <DetailCell label="Boarding" value={boarding} mono />
-          <DetailCell label="Class" value={trip.fareClass} />
+          <DetailCell label="Tier" value={tier} />
+          <DetailCell label="Hotel" value={hotelRoom} />
+          <DetailCell label="Guests" value={trip.pax.toString()} mono />
         </div>
         <div className="grid grid-cols-2 gap-px border-b border-bluelagoon-line bg-bluelagoon-line sm:grid-cols-4">
-          <DetailCell label="Gate" value={gate} mono accent />
-          <DetailCell label="Seat" value={seat} mono accent />
-          <DetailCell label="Zone" value={zone} mono />
-          <DetailCell label="Bag drop" value="Closes 09:30" />
+          <DetailCell label="Check-in" value={kiosk} accent />
+          <DetailCell
+            label="Towel"
+            value="Included"
+            accent={tier !== "Comfort"}
+          />
+          <DetailCell label="Locker" value="Auto-assigned" />
+          <DetailCell label="Robe" value={tier === "Comfort" ? "—" : "Yes"} />
         </div>
 
-        {/* Stub: ref + barcode */}
+        {/* Stub: ref + QR */}
         <div className="relative bg-bluelagoon-cloud/70 px-6 py-5">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-bluelagoon-muted">
-                Booking ref
+                Reservation
               </p>
               <p className="font-mono text-lg tracking-[0.3em] text-bluelagoon-midnight">
                 {trip.ref}
@@ -188,27 +179,31 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
             </div>
             <div className="text-right">
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-bluelagoon-muted">
-                Saga Club
+                Loyalty
               </p>
               <p className="font-loft text-sm font-bold text-bluelagoon-midnight">
-                Silver · 12,480 pts
+                Ambassador · 18,250 pts
               </p>
             </div>
           </div>
 
           <div
-            className="mt-4 flex h-14 items-center gap-px rounded-md bg-bluelagoon-snow px-2"
-            aria-label="Barcode"
+            className="mt-4 inline-grid grid-cols-12 gap-0 rounded-md bg-bluelagoon-snow p-2"
+            aria-label="QR code"
             role="img"
           >
-            {BARCODE_BARS.map((w, i) => (
+            {QR_CELLS.map((cell, i) => (
               <div
                 key={i}
-                style={{ width: `${w}px` }}
-                className="h-full bg-bluelagoon-midnight"
+                className={`h-2.5 w-2.5 ${
+                  cell === 1 ? "bg-bluelagoon-midnight" : "bg-bluelagoon-snow"
+                }`}
               />
             ))}
           </div>
+          <p className="mt-2 text-[11px] uppercase tracking-widest text-bluelagoon-muted">
+            Show this at the spa kiosk on arrival.
+          </p>
         </div>
 
         {/* Tear-line footer */}
@@ -225,7 +220,7 @@ export function BoardingPass({ trip, passengerName }: BoardingPassProps) {
 
         <div className="bg-bluelagoon-paper px-6 pb-6 pt-3 text-center">
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Demo boarding pass — please don't try to use it at the airport.
+            Demo arrival pass — please don't try to use it at the gate.
           </p>
         </div>
       </div>
@@ -258,7 +253,7 @@ function DetailCell({
   );
 }
 
-function PlaneIcon() {
+function SpaIcon() {
   return (
     <svg
       width="22"
@@ -268,9 +263,18 @@ function PlaneIcon() {
       aria-hidden="true"
       className="text-bluelagoon-crisp"
     >
+      {/* steaming pool — three curls of steam over a half-pool */}
       <path
-        d="M2 13l9-3 6-7 2 1-3 8 5 1 2 2-7 2-2 5-2 1-1-5-7-2-2-3z"
+        d="M3 17c2 1 4 1 6 0s4-1 6 0 4 1 6 0v3H3v-3z"
         fill="currentColor"
+        opacity="0.85"
+      />
+      <path
+        d="M7 11c1-2 1-3 0-5M12 12c1-2 1-3 0-5M17 11c1-2 1-3 0-5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
       />
     </svg>
   );

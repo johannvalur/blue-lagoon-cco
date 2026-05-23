@@ -1,13 +1,10 @@
 import Image from "next/image";
 
-const LIVERY_IMAGE =
-  "https://images.contentstack.io/v3/assets/blt279b94f6e22ca52e/blt3940b8d634d00f9a/643d55f9ea4ed2292f8d354e/livery-3.jpg";
-
 export function ConceptHero() {
   return (
     <section className="relative isolate flex min-h-[calc(100dvh-53px)] items-center overflow-hidden bg-bluelagoon-midnight text-bluelagoon-snow sm:min-h-[calc(100dvh-65px)]">
       <Image
-        src={LIVERY_IMAGE}
+        src="https://images.ctfassets.net/w65k7w0nsb8q/1VEzIcXy42Gp5eFe4uqJor/8c292500a2a1b4092c47e1bc2889eca9/DSC08079.jpg?w=3840&q=75&fm=webp"
         alt=""
         fill
         priority
@@ -24,12 +21,12 @@ export function ConceptHero() {
           An AI-first concept · v0.1
         </p>
         <h1 className="mt-6 max-w-3xl font-loft text-[2.75rem] font-bold leading-[1.02] tracking-tight md:text-7xl">
-          The First Airline on AutoPilot with AI
+          The first geothermal spa rebuilt around AI
         </h1>
         <p className="mt-8 max-w-2xl text-base leading-relaxed text-bluelagoon-snow/80 md:text-lg">
-          What an AI-native carrier built on Blue Lagoon&rsquo;s structural
-          advantages — North Atlantic hub, brand, scale — could look like, end
-          to end. Written for an internal leadership audience.
+          What an AI-native Blue Lagoon — one conversational concierge, one
+          calm floor copilot, every role grounded in our own corpus — could
+          look like, end to end. Written for an internal leadership audience.
         </p>
 
         <p className="mt-10 max-w-2xl text-xs text-bluelagoon-snow/55 md:text-[13px]">

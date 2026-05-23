@@ -20,7 +20,7 @@ function statusPillStyles(status: TripStatus): string {
 
 function statusLabel(status: TripStatus): string {
   if (status === "held") return "Held";
-  if (status === "checked-in") return "Checked in";
+  if (status === "checked-in") return "Arrived";
   return "Cancelled";
 }
 
@@ -47,11 +47,11 @@ export default function ManagePage({ params }: ManagePageProps) {
       <div className="space-y-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            <span className="text-bluelagoon-midnight">Manage trip</span>
+            <span className="text-bluelagoon-midnight">Manage reservation</span>
             <span className="text-bluelagoon-line"> · </span>change or cancel
           </p>
           <h1 className="mt-1 font-loft text-3xl font-extrabold tracking-tight text-bluelagoon-midnight md:text-4xl">
-            {trip ? trip.dest.city : "Your trip"}
+            {trip ? trip.dest.city : "Your visit"}
           </h1>
         </div>
 
@@ -61,15 +61,15 @@ export default function ManagePage({ params }: ManagePageProps) {
               We can't find {ref} in this browser.
             </p>
             <p className="mt-2 text-sm text-bluelagoon-ink/85">
-              Trips are stored locally for the demo. Try the trips list, or
-              hold a fresh booking.
+              Reservations are stored locally for the demo. Try the visits list,
+              or hold a fresh reservation.
             </p>
             <div className="mt-5 flex justify-center gap-2">
               <Link
                 href="/customer/trips"
                 className="rounded-xl border border-bluelagoon-line bg-bluelagoon-paper px-4 py-2 text-sm font-semibold text-bluelagoon-midnight transition hover:border-bluelagoon-midnight"
               >
-                ← Trips
+                ← My visits
               </Link>
               <Link
                 href="/customer"
@@ -87,7 +87,7 @@ export default function ManagePage({ params }: ManagePageProps) {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="text-xs text-bluelagoon-muted">
-                    {trip.dest.iata} · {trip.fareClass} · {trip.pax} traveller
+                    {trip.fareClass} entry · {trip.pax} guest
                     {trip.pax === 1 ? "" : "s"}
                   </div>
                   <div className="mt-1 font-mono text-xs tracking-widest text-bluelagoon-muted">
@@ -95,7 +95,7 @@ export default function ManagePage({ params }: ManagePageProps) {
                   </div>
                   <div className="mt-3 text-sm text-bluelagoon-ink">
                     {trip.depart}
-                    {trip.return ? ` → ${trip.return}` : " (one-way)"}
+                    {trip.return ? ` → ${trip.return}` : " (single visit)"}
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2">

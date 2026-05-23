@@ -3,10 +3,10 @@ import { getAnthropic, MODEL_OPUS } from "@/lib/anthropic";
 import { LOYALTY_SYSTEM_PROMPT } from "@/lib/prompts/customer/loyalty";
 import {
   makeCheckBalanceTool,
-  makeRedeemForFlightTool,
+  makeRedeemForVisitTool,
   makeViewYearRecapTool,
   type CheckBalanceResult,
-  type RedeemForFlightResult,
+  type RedeemForVisitResult,
   type ViewYearRecapResult,
 } from "@/lib/tools/loyaltyTools";
 
@@ -99,11 +99,11 @@ interface RunArgs {
 
 async function runLoyaltyToolLoop({ client, messages, send }: RunArgs) {
   const balanceQueue: CheckBalanceResult[] = [];
-  const redeemQueue: RedeemForFlightResult[] = [];
+  const redeemQueue: RedeemForVisitResult[] = [];
   const recapQueue: ViewYearRecapResult[] = [];
 
   const checkBalance = makeCheckBalanceTool((r) => balanceQueue.push(r));
-  const redeemForFlight = makeRedeemForFlightTool((r) => redeemQueue.push(r));
+  const redeemForVisit = makeRedeemForVisitTool((r) => redeemQueue.push(r));
   const viewYearRecap = makeViewYearRecapTool((r) => recapQueue.push(r));
 
   const runner = client.beta.messages.toolRunner({
@@ -117,7 +117,7 @@ async function runLoyaltyToolLoop({ client, messages, send }: RunArgs) {
       },
     ],
     messages,
-    tools: [checkBalance, redeemForFlight, viewYearRecap],
+    tools: [checkBalance, redeemForVisit, viewYearRecap],
     ...{ output_config: { effort: EFFORT } },
     stream: true,
   });
@@ -180,11 +180,11 @@ async function runLoyaltyToolLoop({ client, messages, send }: RunArgs) {
       for (const tu of pendingToolUses) {
         let result:
           | CheckBalanceResult
-          | RedeemForFlightResult
+          | RedeemForVisitResult
           | ViewYearRecapResult
           | undefined;
         if (tu.name === "check_balance") result = balanceQueue.shift();
-        else if (tu.name === "redeem_for_flight") result = redeemQueue.shift();
+        else if (tu.name === "redeem_for_visit") result = redeemQueue.shift();
         else if (tu.name === "view_year_recap") result = recapQueue.shift();
         if (result) {
           send({

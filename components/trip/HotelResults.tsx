@@ -8,17 +8,15 @@ interface HotelResultsProps {
 }
 
 const TIER_LABEL: Record<string, string> = {
-  boutique: "Boutique",
   design: "Design",
-  comfort: "Comfort",
-  "ryokan-style": "Ryokan-style",
-  lodge: "Lodge",
+  suite: "Suite",
+  city: "City",
+  boutique: "Boutique",
 };
 
-const WALKABILITY_LABEL: Record<string, string> = {
-  walkable: "Walkable",
-  "car-helpful": "Car helpful",
-  "car-needed": "Car needed",
+const LOCATION_LABEL: Record<string, string> = {
+  onsite: "On-site at Blue Lagoon",
+  reykjavik: "Reykjavík",
 };
 
 export function HotelResults({ result, onAdd }: HotelResultsProps) {
@@ -46,7 +44,7 @@ export function HotelResults({ result, onAdd }: HotelResultsProps) {
                   {hotel.name}
                 </div>
                 <div className="mt-0.5 text-xs text-bluelagoon-muted">
-                  {hotel.area} · {hotel.cityIata}
+                  {LOCATION_LABEL[hotel.location] ?? hotel.location}
                 </div>
               </div>
               <span className="rounded-full bg-bluelagoon-mist/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-bluelagoon-ink">
@@ -62,30 +60,34 @@ export function HotelResults({ result, onAdd }: HotelResultsProps) {
                   {v}
                 </span>
               ))}
-              <span className="rounded-full bg-bluelagoon-cloud px-2 py-0.5 text-[11px] text-bluelagoon-muted">
-                {WALKABILITY_LABEL[hotel.walkability] ?? hotel.walkability}
-              </span>
-              {hotel.geothermalOnsite ? (
+              {hotel.isOnsite ? (
                 <span className="rounded-full bg-bluelagoon-boreal/30 px-2 py-0.5 text-[11px] text-bluelagoon-ink">
-                  Geothermal onsite
+                  On-site
                 </span>
               ) : null}
             </div>
             <p className="mt-3 line-clamp-3 text-sm leading-snug text-bluelagoon-ink">
               {hotel.why}
             </p>
+            {hotel.restaurantsOnsite && hotel.restaurantsOnsite.length > 0 ? (
+              <p className="mt-2 text-xs text-bluelagoon-muted">
+                Restaurants on site: {hotel.restaurantsOnsite.join(", ")}
+              </p>
+            ) : null}
             <div className="mt-4 flex items-end justify-between gap-3">
               <div>
                 <p className="font-loft text-xl font-bold text-bluelagoon-midnight">
-                  from €{hotel.priceEURPerNight}
+                  from €{hotel.priceEURPerNightFrom}
                 </p>
-                <p className="text-xs text-bluelagoon-muted">per night</p>
+                <p className="text-xs text-bluelagoon-muted">
+                  per night · up to €{hotel.priceEURPerNightTo}
+                </p>
               </div>
               <button
                 onClick={() => onAdd(hotel)}
                 className="rounded-xl border border-bluelagoon-midnight bg-bluelagoon-paper px-3 py-2 text-xs font-semibold text-bluelagoon-midnight transition hover:bg-bluelagoon-midnight hover:text-bluelagoon-snow"
               >
-                Add to trip
+                Add to visit
               </button>
             </div>
           </div>

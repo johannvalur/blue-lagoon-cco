@@ -1,16 +1,23 @@
 import type {
-  DisruptionBrief,
-  TravelerTrip,
+  BookedVisit,
+  MaintenanceDisruption,
 } from "@/lib/data/customer/tripScenario";
 
 interface TripStatusCardProps {
-  trip: TravelerTrip;
-  disruption?: DisruptionBrief;
+  trip: BookedVisit;
+  disruption?: MaintenanceDisruption;
 }
 
 export function TripStatusCard({ trip, disruption }: TripStatusCardProps) {
   const atRisk = !!disruption;
-  const accent = atRisk ? "fiery" : "boreal";
+  const tierTint =
+    trip.tier === "Retreat Spa"
+      ? "bluelagoon-volcanic"
+      : trip.tier === "Signature"
+        ? "bluelagoon-golden"
+        : trip.tier === "Premium"
+          ? "bluelagoon-crisp"
+          : "bluelagoon-muted";
 
   return (
     <div
@@ -18,34 +25,37 @@ export function TripStatusCard({ trip, disruption }: TripStatusCardProps) {
         atRisk ? "border-l-bluelagoon-fiery" : "border-l-bluelagoon-boreal"
       }`}
       role="region"
-      aria-label={`Trip status for ${trip.flight}`}
+      aria-label={`Visit status for ${trip.ref}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
-            Booking {trip.bookingRef} · {trip.fareClass}
+            Reservation {trip.ref}
           </p>
           <div className="mt-1 flex items-baseline gap-3">
             <span className="font-loft text-2xl font-bold text-bluelagoon-midnight">
-              {trip.flight}
+              {trip.arrivalWindow}
             </span>
-            <span className="text-bluelagoon-ink">
-              {trip.origin} → {trip.destination}
-            </span>
+            <span className="text-bluelagoon-ink">{trip.visitDate}</span>
           </div>
-          <p className="mt-1 text-xs text-bluelagoon-muted">
-            {trip.aircraftType} · scheduled {trip.schedDep} · {trip.durationHrs}h
-            direct
-          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <span
+              className={`rounded-full bg-${tierTint}/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-${tierTint}`}
+            >
+              {trip.tier}
+            </span>
+            {trip.hotelName && (
+              <span className="text-xs text-bluelagoon-muted">
+                {trip.hotelName}
+                {trip.hotelRoom ? ` · room ${trip.hotelRoom}` : ""}
+              </span>
+            )}
+          </div>
         </div>
         {atRisk ? (
-          <div
-            className={`shrink-0 rounded-full bg-bluelagoon-fiery/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-fiery`}
-          >
-            <span
-              className={`mr-2 inline-block h-1.5 w-1.5 rounded-full bg-bluelagoon-${accent} pulse-soft align-middle`}
-            />
-            At risk · {disruption.cause}
+          <div className="shrink-0 rounded-full bg-bluelagoon-fiery/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-fiery">
+            <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-bluelagoon-fiery pulse-soft align-middle" />
+            Affected by maintenance
           </div>
         ) : (
           <div className="shrink-0 rounded-full bg-bluelagoon-volcanic/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-bluelagoon-volcanic">
@@ -54,11 +64,20 @@ export function TripStatusCard({ trip, disruption }: TripStatusCardProps) {
         )}
       </div>
 
-      {atRisk && (
+      {atRisk && disruption && (
         <div className="mt-4 border-t border-bluelagoon-line pt-4">
-          <p className="text-sm text-bluelagoon-ink">{disruption.causeDetail}</p>
+          <p className="text-sm text-bluelagoon-ink">
+            {disruption.cause}. {disruption.capacityImpact} from{" "}
+            {disruption.windowStart} to {disruption.windowEnd}.{" "}
+            {disruption.affectedAreasUnaffected.length > 0
+              ? `${disruption.affectedAreasUnaffected[0]} unaffected.`
+              : ""}
+          </p>
+          <p className="mt-1 text-xs text-bluelagoon-muted">
+            {disruption.causeDetail}
+          </p>
           <ul className="mt-3 space-y-2 text-sm">
-            {disruption.options.map((opt) => (
+            {disruption.recoveryOptions.map((opt) => (
               <li
                 key={opt.id}
                 className="flex items-start gap-3 rounded-xl bg-bluelagoon-cloud/60 p-3"
@@ -80,9 +99,11 @@ export function TripStatusCard({ trip, disruption }: TripStatusCardProps) {
                       </span>
                     )}
                   </p>
-                  <p className="mt-0.5 text-bluelagoon-ink">{opt.detail}</p>
+                  <p className="mt-0.5 text-bluelagoon-ink">
+                    {opt.description}
+                  </p>
                   <p className="mt-0.5 text-xs text-bluelagoon-muted">
-                    {opt.consequence}
+                    {opt.valueLine}
                   </p>
                 </div>
               </li>

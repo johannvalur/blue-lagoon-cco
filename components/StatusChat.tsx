@@ -18,7 +18,7 @@ interface StatusChatProps {
 }
 
 const DEFAULT_PLACEHOLDER =
-  "Ask about your flight — status, options, what to do next.";
+  "Ask about your visit — status, options, what to do next.";
 
 export function StatusChat({
   placeholder = DEFAULT_PLACEHOLDER,

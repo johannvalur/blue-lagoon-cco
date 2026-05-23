@@ -43,9 +43,9 @@ const ARC_MS = 2200;
 const HUMAN_HALO_MS = 60_000;
 
 const LIVE_EXAMPLES = [
-  "Reroute IFD-bound flights tonight, minimize crew overtime.",
-  "TF-FIA APU bearing wear is trending — plan the swap.",
-  "Q3 fuel curve spiked — hedge or hold?",
+  "Pump 2 of the silica filtration cycle is showing elevated vibration — plan the swap.",
+  "A coach of 38 walk-in guests just arrived unannounced — fit them into today's waves.",
+  "The Mineral line moisturiser is selling out of stores 9 days before reorder. What now?",
 ];
 
 interface WireEvent {

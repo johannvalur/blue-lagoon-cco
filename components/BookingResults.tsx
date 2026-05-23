@@ -1,74 +1,78 @@
 "use client";
 
 import type {
-  SearchFlightsResult,
-  HoldBookingResult,
+  SearchExperiencesResult,
+  HoldReservationResult,
 } from "@/lib/tools/bookingTools";
 
-type FareClass = "light" | "standard" | "flex" | "saga";
+// Older legacy names — kept so existing imports resolve.
+type SearchFlightsResult = SearchExperiencesResult;
+type HoldBookingResult = HoldReservationResult;
 
 interface BookingResultsProps {
   result: SearchFlightsResult;
-  onHold: (
-    option: SearchFlightsResult["options"][number],
-    fareClass: FareClass,
-  ) => void;
+  onHold: (option: { tierId: string; name: string }, tier: string) => void;
 }
 
+const TIER_LABEL: Record<string, string> = {
+  comfort: "Comfort",
+  premium: "Premium",
+  signature: "Signature",
+  "retreat-spa": "Retreat Spa",
+};
+
 export function BookingResults({ result, onHold }: BookingResultsProps) {
-  if (!result.options || result.options.length === 0) {
+  if (!result.tiers || result.tiers.length === 0) {
     return (
       <div className="rounded-2xl border border-bluelagoon-line bg-bluelagoon-paper p-4 text-sm text-bluelagoon-muted">
-        No matching destinations found. Try loosening the brief.
+        No matching entry tiers. Try loosening the brief.
       </div>
     );
   }
 
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted mb-3">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-bluelagoon-muted">
         {result.query_summary}
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {result.options.map((opt, idx) => (
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {result.tiers.map((opt, idx) => (
           <div
-            key={opt.iata}
-            className="surface-card rounded-2xl p-5 border-l-4 border-l-bluelagoon-crisp flex flex-col"
+            key={opt.tierId}
+            className="surface-card flex flex-col rounded-2xl border-l-4 border-l-bluelagoon-crisp p-5"
             data-demo-card={idx === 0 ? "first" : undefined}
           >
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-bluelagoon-muted">
+              Entry tier
+            </p>
             <div className="font-loft text-xl font-bold text-bluelagoon-midnight">
-              {opt.destination}
-            </div>
-            <div className="text-xs text-bluelagoon-muted mt-0.5">
-              {opt.iata} · {opt.country}
-            </div>
-            <div className="text-xs text-bluelagoon-muted mt-1">
-              From KEF · {opt.flightTimeHrs}h direct
+              {opt.name}
             </div>
             <div className="mt-3">
               <div className="font-loft text-2xl font-bold text-bluelagoon-midnight">
-                from €{opt.fareEUR}
+                €{opt.priceEUR}
               </div>
               <div className="text-xs text-bluelagoon-muted">
-                or €{opt.sagaFareEUR} Saga
+                per guest · {TIER_LABEL[opt.tierId] ?? opt.tierId}
               </div>
             </div>
-            <div className="mt-3 flex flex-wrap gap-1">
-              {opt.vibe.slice(0, 4).map((v) => (
-                <span
-                  key={v}
-                  className="rounded-full bg-bluelagoon-mist/60 px-2 py-0.5 text-[11px] text-bluelagoon-ink"
-                >
-                  {v}
-                </span>
+            <ul className="mt-3 space-y-1 text-xs text-bluelagoon-ink">
+              {opt.inclusions.slice(0, 5).map((line) => (
+                <li key={line} className="flex items-start gap-2">
+                  <span
+                    className="mt-1.5 inline-block h-1 w-1 shrink-0 rounded-full bg-bluelagoon-crisp"
+                    aria-hidden="true"
+                  />
+                  <span>{line}</span>
+                </li>
               ))}
-            </div>
-            <p className="mt-3 text-sm leading-snug text-bluelagoon-ink line-clamp-3">
+            </ul>
+            <p className="mt-3 line-clamp-3 text-sm leading-snug text-bluelagoon-ink">
               {opt.why}
             </p>
             <div className="mt-4">
               <button
-                onClick={() => onHold(opt, "standard")}
+                onClick={() => onHold({ tierId: opt.tierId, name: opt.name }, opt.tierId)}
                 data-demo-hold={idx === 0 ? "first" : undefined}
                 className="btn-primary rounded-xl px-4 py-2 text-sm font-semibold"
               >
@@ -78,6 +82,9 @@ export function BookingResults({ result, onHold }: BookingResultsProps) {
           </div>
         ))}
       </div>
+      {result.note ? (
+        <p className="mt-3 text-xs italic text-bluelagoon-muted">{result.note}</p>
+      ) : null}
     </div>
   );
 }
@@ -87,38 +94,72 @@ interface BookingConfirmationProps {
 }
 
 export function BookingConfirmation({ result }: BookingConfirmationProps) {
+  const addonsTotal = result.addons.reduce(
+    (s, a) => s + a.priceEUR * result.guests,
+    0,
+  );
   return (
-    <div className="surface-card rounded-2xl p-5 border-l-4 border-l-bluelagoon-volcanic">
+    <div className="surface-card rounded-2xl border-l-4 border-l-bluelagoon-volcanic p-5">
       <p className="text-xs font-semibold uppercase tracking-widest text-bluelagoon-volcanic">
-        Held
+        Reservation held
       </p>
       <div className="mt-1 font-loft text-xl font-bold text-bluelagoon-midnight">
-        {result.destination}{" "}
-        <span className="text-bluelagoon-muted text-sm font-normal">
-          {result.destination_iata}
+        {result.tier_name}{" "}
+        <span className="text-sm font-normal text-bluelagoon-muted">
+          entry
         </span>
       </div>
       <div className="mt-2 font-mono text-sm tracking-widest text-bluelagoon-ink">
-        {result.booking_ref}
+        {result.reservation_ref}
       </div>
       <div className="mt-3 grid grid-cols-2 gap-3 text-sm text-bluelagoon-ink">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Schedule
+            Arrival
           </p>
           <p>
-            {result.depart_date} → {result.return_date}
+            {result.date} · {result.arrival_time}
           </p>
         </div>
         <div>
           <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
-            Travellers · fare
+            Guests
           </p>
-          <p>
-            {result.travelers} · {result.fare_class}
-          </p>
+          <p>{result.guests}</p>
         </div>
+        {result.hotel_name ? (
+          <div className="col-span-2">
+            <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
+              Stay
+            </p>
+            <p>
+              {result.hotel_name} · {result.nights} night
+              {result.nights === 1 ? "" : "s"}
+            </p>
+          </div>
+        ) : null}
       </div>
+      {result.addons.length > 0 ? (
+        <div className="mt-3">
+          <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
+            Add-ons
+          </p>
+          <ul className="mt-1 space-y-0.5 text-sm text-bluelagoon-ink">
+            {result.addons.map((a) => (
+              <li key={a.id} className="flex justify-between">
+                <span>{a.name}</span>
+                <span className="text-bluelagoon-muted">€{a.priceEUR}</span>
+              </li>
+            ))}
+          </ul>
+          {addonsTotal > 0 ? (
+            <p className="mt-1 text-xs text-bluelagoon-muted">
+              Add-ons subtotal: €{addonsTotal} (×{result.guests} guest
+              {result.guests === 1 ? "" : "s"})
+            </p>
+          ) : null}
+        </div>
+      ) : null}
       <div className="mt-4">
         <p className="text-[11px] uppercase tracking-widest text-bluelagoon-muted">
           Total

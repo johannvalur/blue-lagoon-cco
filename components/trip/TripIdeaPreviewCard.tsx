@@ -8,6 +8,13 @@ interface TripIdeaPreviewCardProps {
   idea: TripIdea;
 }
 
+const TIER_LABEL: Record<string, string> = {
+  comfort: "Comfort",
+  premium: "Premium",
+  signature: "Signature",
+  "retreat-spa": "Retreat Spa",
+};
+
 export function TripIdeaPreviewCard({ idea }: TripIdeaPreviewCardProps) {
   const encoded = encodeTripIdea(idea);
   const sharePath = encoded ? `/customer/trip/${encoded}` : null;
@@ -18,9 +25,16 @@ export function TripIdeaPreviewCard({ idea }: TripIdeaPreviewCardProps) {
       idea.cars.reduce((s, c) => s + c.days * c.pricePerDayEUR, 0) +
       idea.packages.reduce((s, p) => s + p.priceFromEURPerPerson, 0);
 
-  const route = idea.legs
-    .map((l, i) => (i === 0 ? `${l.origin}→${l.iata}` : `→${l.iata}`))
-    .join(" ");
+  // Re-shape the legs into a friendly plan line:
+  //   "Premium · 2 nights at Silica"
+  const tierLine = idea.legs
+    .map((l) => TIER_LABEL[l.iata.toLowerCase()] ?? l.iata)
+    .filter(Boolean)
+    .join(" · ");
+  const hotelLine = idea.hotels
+    .map((h) => `${h.nights}n at ${h.name}`)
+    .join(" + ");
+  const summaryLine = [tierLine, hotelLine].filter(Boolean).join(" · ");
 
   return (
     <Link
@@ -28,13 +42,13 @@ export function TripIdeaPreviewCard({ idea }: TripIdeaPreviewCardProps) {
       className="surface-card flex h-full min-w-[240px] flex-col rounded-2xl border-l-4 border-l-bluelagoon-bright p-4 transition hover:translate-y-[-1px] hover:shadow-md"
     >
       <p className="text-[10px] font-semibold uppercase tracking-widest text-bluelagoon-bright">
-        Saved trip
+        Saved visit
       </p>
       <p className="mt-1 line-clamp-2 font-loft text-base font-bold text-bluelagoon-midnight">
         {idea.title}
       </p>
-      {route && (
-        <p className="mt-2 font-mono text-xs text-bluelagoon-muted">{route}</p>
+      {summaryLine && (
+        <p className="mt-2 text-xs text-bluelagoon-muted">{summaryLine}</p>
       )}
       <div className="mt-auto flex items-baseline justify-between pt-3">
         {total ? (

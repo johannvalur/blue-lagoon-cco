@@ -428,23 +428,22 @@ function CookieSettingsContent({ onClose }: { onClose: () => void }) {
 const SITEMAP: { heading: string; items: { label: string; href: string }[] }[] =
   [
     {
-      heading: "Customer",
+      heading: "Guest",
       items: [
         { label: "Home", href: "/customer" },
-        { label: "Book", href: "/customer/book" },
+        { label: "Plan a visit", href: "/customer/chat" },
         { label: "Companion", href: "/customer/companion" },
-        { label: "Loyalty", href: "/customer/loyalty" },
-        { label: "Stopover", href: "/customer/stopover" },
+        { label: "Insider", href: "/customer/loyalty" },
         { label: "Status", href: "/customer/status" },
-        { label: "Trips", href: "/customer/trips" },
+        { label: "My visits", href: "/customer/trips" },
       ],
     },
     {
-      heading: "Airline",
+      heading: "Resort",
       items: [
         { label: "Internal hub", href: "/internal" },
         { label: "Operations", href: "/internal/ops" },
-        { label: "Crew", href: "/internal/crew" },
+        { label: "Team", href: "/internal/crew" },
         { label: "Telemetry", href: "/internal/telemetry" },
       ],
     },

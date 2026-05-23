@@ -16,18 +16,18 @@ export function FooterPolicyLinks() {
 
   return (
     <>
-      <ul className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 pb-9 text-[11px] text-bluelagoon-snow/50 sm:justify-start sm:pb-11">
+      <ul className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 pb-9 text-[11px] text-bluelagoon-muted sm:justify-start sm:pb-11">
         {POLICY_LINKS.map((link, i) => (
           <li key={link.key} className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setActive(link.key)}
-              className="transition hover:text-bluelagoon-snow focus-visible:text-bluelagoon-snow focus-visible:outline-none"
+              className="transition hover:text-bluelagoon-midnight focus-visible:text-bluelagoon-midnight focus-visible:outline-none"
             >
               {link.label}
             </button>
             {i < POLICY_LINKS.length - 1 && (
-              <span aria-hidden className="text-bluelagoon-snow/30">
+              <span aria-hidden className="text-bluelagoon-line">
                 ·
               </span>
             )}

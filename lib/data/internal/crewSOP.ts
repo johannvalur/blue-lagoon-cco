@@ -1,98 +1,166 @@
-export const CREW_SOP_CORPUS = `# Blue Lagoon Cabin Crew Standard Operating Procedures (Synthetic Demo Excerpt)
+// Blue Lagoon spa floor Standard Operating Procedures. Grounded reference
+// corpus consumed by the Crew Copilot prompt. Written for working spa staff,
+// not guests. Synthetic but internally consistent — the copilot must not
+// invent facts outside this corpus.
 
-## Section 1 — Pre-Flight
+export const CREW_SOP_CORPUS = `# Blue Lagoon Spa Floor Standard Operating Procedures (Synthetic Demo Excerpt)
 
-### 1.1 Cabin Readiness Check
-Cabin crew must complete the readiness check no later than 25 minutes before scheduled departure. The check covers:
-- Emergency equipment in all assigned zones (oxygen bottles, PBE, fire extinguishers, life vests beneath designated seats).
-- Cabin cleanliness and stowage.
-- Catering loaded and seal numbers cross-checked against the loading manifest.
-- IFE (Blue Lagoon Stream) systems powered and pre-flight loop running.
+## Section 1 — Pre-shift readiness
 
-### 1.2 Crew Briefing
-The Senior Cabin Crew Member (SCCM) leads a briefing covering:
-- Flight number, route, scheduled times, and expected flight time.
-- Aircraft type and emergency equipment locations specific to the type.
-- Special service requests (UMNRs, WCHRs, dietary requirements, paid upgrades to Saga).
-- Weather, turbulence forecast, and any operational notes from dispatch.
-- Crew positions and door responsibilities.
+### 1.1 Stations checklist
+Before the floor opens (or before your shift begins on a rolling-shift day), confirm each station is operational:
+- **Kiosk system.** All check-in kiosks powered, screens responsive, RFID wristband printers loaded. Test print one wristband per kiosk.
+- **Locker handhelds.** Each locker attendant carries a charged handheld. Test-scan a wristband against the locker assignment screen.
+- **Treatment-room turnover board.** Confirm the digital board reflects the day's bookings and that every room shows a 20-minute turnover gap between guests.
+- **Mask bar stock.** Silica mask, algae mask, mineral mask, rinse water bottles, single-use applicators. Indoor and outdoor stations both fully stocked unless an outage notice says otherwise.
+- **Towel stations.** Robe shelves stocked for each tier (Comfort, Premium, Signature, Retreat Spa). Towels stacked at lagoon exits.
+- **Lifeguard rotation roster.** Posted at lifeguard station A. Cross-check the four-zone rotation against the day's coverage matrix.
 
-## Section 2 — Boarding
+### 1.2 Floor manager briefing
+Fifteen minutes before shift, the floor manager runs a stand-up covering:
+- Today's capacity targets by hour, against entry tier mix.
+- VIPs and Ambassador / Patron arrivals (name, arrival window, tier, any noted preferences).
+- Special-access guests (mobility assistance, dietary flags for Lava / Moss / Spa Restaurant, sensory accommodations).
+- Today's facility maintenance status (any pump, filtration, or zone constraints).
+- Therapist roster and any reassignments from the standard plan.
 
-### 2.1 Boarding Sequence
-Boarding sequence at Blue Lagoon is by zone, optimized to minimize aisle congestion:
-1. Step-free access and unaccompanied minors.
-2. Saga cabin and Blue Lagoon Saga Club Gold members.
-3. Window seats from rows 22 onward.
-4. Middle and aisle seats from rows 22 onward.
-5. Rows 10–21.
-6. Rows 1–9 (Saga and front economy).
+If you miss the briefing, ask the floor manager for the briefing card before you start. Do not improvise from yesterday's plan.
 
-Crew should actively manage the gate by anticipating denied-boarding scenarios and proactively assisting passengers struggling with bag stowage. The standing crew member at the L1 door is responsible for greeting and counting passengers.
+## Section 2 — Arrival flow
 
-### 2.2 Special Categories
-- **Unaccompanied Minors (UMNRs):** Verify documentation matches the manifest. Seat in row 14 unless otherwise indicated. Hand off to ground staff at destination requires signature.
-- **Wheelchair (WCHR/WCHS/WCHC):** Confirm wheelchair stowage. WCHC passengers may require the on-board wheelchair for lavatory access.
-- **Live Animals in Cabin (PETC):** Maximum two per cabin. Carrier must remain under the seat in front for the duration of the flight.
+### 2.1 Kiosk hand-off to locker
+1. Greet the guest as they exit the kiosk lane. For Ambassador and Patron tier, use their name and the priority lane signage.
+2. Confirm wristband activates by tapping it against your handheld.
+3. Walk them to the assigned locker bank. Point out the locker number screen and demonstrate the open/close tap.
 
-## Section 3 — Service
+### 2.2 Mask choice and towel
+- **Silica** mask is included in every entry tier and is offered by default at the mask bar.
+- **Algae** mask is an upgrade — Premium and above includes one application, Comfort guests can purchase at the bar.
+- **Mineral** mask is included only at Signature and Retreat Spa.
+- Hand over the robe at the assigned tier shelf. Towels are picked up at lagoon entry, not in the changing area.
 
-### 3.1 Service Flow — North Atlantic Routes (5h+)
-1. Welcome drink within 25 minutes of takeoff.
-2. Hot meal service starting at +45 minutes from takeoff. Saga first, then economy front-to-back.
-3. Mid-flight beverage round.
-4. Snack and drink service 90 minutes prior to landing.
+### 2.3 Lagoon entry direction
+Direct guests through the warm rinse showers, then the indoor lagoon entry tunnel. Remind them that water temperature is 37–40 °C and that they should hydrate at the rinse station before extended in-water time.
 
-### 3.2 Service Flow — Short-Haul European Routes (under 4h)
-1. Single beverage and snack service starting 25 minutes after takeoff.
-2. Buy-on-board cart deployed once seatbelt sign is off and weather permits.
-3. Final beverage round 45 minutes before landing.
+### 2.4 Ambassador / Patron priority lane
+Ambassador and Patron tier guests use the priority lane to the right of the main lobby. Greet by name, walk them through the lane personally, hand off to the Premium-side locker attendant. Do not route them through the standard kiosk queue even if it is short.
 
-### 3.3 Special Meals
-Special meals (VGML, GFML, KSML, etc.) must be confirmed against the manifest before departure. If a special meal is missing, offer the closest substitute and log the discrepancy in the cabin report — Blue Lagoon compensates affected passengers automatically through the loyalty system.
+## Section 3 — Lagoon supervision
 
-## Section 4 — Safety & Emergencies
+### 3.1 Zone coverage
+Four lifeguards on shift. The lagoon is divided into Zones A, B, C, D. Rotation is every 20 minutes; the schedule is posted at lifeguard station A.
 
-### 4.1 Decompression
-On decompression, the cabin altitude warning sounds. Crew immediately:
-1. Don the nearest oxygen mask.
-2. Assist nearest passenger if any are not using their masks.
-3. Hold position until aircraft has descended below 10,000 ft and the captain advises.
+### 3.2 Buddy-check signals
+Lifeguards use a three-tone whistle code:
+- **One short** — visual check requested from an adjacent zone.
+- **Two short** — assistance approaching; clear the immediate area.
+- **One long** — emergency, all guards converge, PA call follows.
 
-### 4.2 Smoke or Fire
-Apply BCF/Halon extinguisher in short bursts at the base of the fire. PBE must be donned before entering smoke. Notify the flight deck immediately via interphone with location and source if known. Do not open any closed compartment without first checking the door for heat.
+### 3.3 PA protocol
+Any PA call goes through the lifeguard station A console. Voice it calm and slow. The standard scripts are taped to the console — read them rather than improvise. PA in English first, then Icelandic.
 
-### 4.3 Medical Events
-Use the on-board medical kit. Make a "doctor on board" PA in English and Icelandic. The captain decides on diversion in consultation with the SCCM. MedLink (the contracted ground-based medical advisory) is reachable at any time via the satellite phone.
+### 3.4 In-water time guidance
+If a guest appears unsteady, dehydrated, or has been in the water more than 90 minutes continuously, signal them to the rinse station. Do not escalate to a medical call unless they decline guidance or show clear symptoms.
 
-### 4.4 Disruptive Passengers
-Blue Lagoon uses a four-stage de-escalation protocol:
-1. Verbal warning, calm and private.
-2. Written notice (Form CB-211).
-3. Restraint kit deployment with captain authorization.
-4. Diversion if behavior continues to threaten safety.
+## Section 4 — Mask bar service flow
 
-All incidents must be recorded in Blue Lagoon's incident reporting system within 6 hours of the conclusion of the flight.
+1. Greet the guest at the bar rail.
+2. Confirm their tier — silica is included for everyone; algae and mineral are tier- or upgrade-gated.
+3. Apply the mask in a single 30-second pass (forehead, cheeks, jaw, avoiding eyes).
+4. Direct them to wait 5–10 minutes — point to the wait area, not the lagoon.
+5. After wait, direct them to the rinse station behind the bar. Do not let masked guests re-enter the deeper lagoon.
+6. Wipe and reset the station between guests. Single-use applicators in the dedicated bin.
 
-## Section 5 — Blue Lagoon-Specific Service Standards
+If the outdoor station is closed (see today's maintenance status), all mask service runs through the indoor station. Floor manager has staffed an extra attendant for that case.
 
-### 5.1 The "Aurora Moment"
-On evening flights between October and March on routes traveling above 60° N, if the captain spots aurora activity, an Aurora Moment is initiated:
-- Cabin lights are dimmed to the minimum legal level.
-- A brief PA invites passengers to look out their windows.
-- The IFE displays a real-time aurora overlay.
+## Section 5 — Treatment room handoff
 
-### 5.2 Saga Cabin Hot Towel
-Saga passengers receive a hot towel before takeoff and again after the meal service. Use the dedicated Saga cabin warmer. Towels are scented with Blue Lagoon's signature blend (birch, juniper, sea salt).
+### 5.1 Turnover
+Every treatment room has a 20-minute turnover between guests:
+- Strip and remake the table with fresh sheets.
+- Reset mood lighting to the room's default scene.
+- Re-stock towels at the side bench (minimum two large, two small).
+- Refill mineral water carafe.
+- Wipe surfaces with the approved disinfectant.
 
-### 5.3 Late Arrival Compensation
-For arrivals more than 60 minutes late at destination, the on-board PA must include a clear apology and a reference to the Blue Lagoon guarantee — affected passengers will receive automatic Saga Club credits within 24 hours, no claim required.
+The turnover board updates automatically when housekeeping marks the room ready.
 
-## Section 6 — Crew Wellness
+### 5.2 Therapist briefing
+Five minutes before each guest, the therapist reviews:
+- Guest name and tier.
+- Treatment booked (in-water massage 30 / 60 / 120, float therapy, silica salt scrub, algae mineral wrap, couples ritual).
+- Any allergen flags or medical notes from the booking.
+- Pressure / focus preferences if noted.
 
-### 6.1 Rest Requirements
-Crew on flights over 7 hours must take a minimum 90-minute rest period in the crew rest area. Rotation is managed by the SCCM and recorded on the cabin log.
+For in-water massage, the therapist meets the guest at the indoor lagoon staging deck, not in the locker hallway.
 
-### 6.2 Reporting Fatigue
-Any crew member experiencing fatigue should report immediately to the SCCM. Fatigue reports do not result in disciplinary action under any circumstances. Blue Lagoon's fatigue risk management system (FRMS) tracks these reports anonymously to identify patterns.
+## Section 6 — Food and beverage
+
+### 6.1 Spa Restaurant
+Robe-accessible and shoe-free. Fast turn. Standard service flow:
+1. Greet at the host stand. Bare feet welcome.
+2. Allergen check at order — read the question script, do not paraphrase.
+3. Standard menu lists gluten-free, dairy-free, and vegan options inline; offer one if the guest hesitates.
+4. Bill is tied to the wristband — single tap to close.
+
+### 6.2 Lava
+Main restaurant, set into the lava cliff. Dress code applies after 18:00 (no robes, no swimwear). Allergen check at booking and again at the table. Reservations are firm — walk-ins only by floor manager authorization.
+
+### 6.3 Moss
+Fine dining at The Retreat. 7-course tasting menu only, 2.5 hours seated. Dress code: smart, after 18:00. Allergen flags must be confirmed at booking and read back at the table by the captain. No phone calls in the dining room.
+
+### 6.4 Lobby Café
+All-day, casual. Robe-accessible. Useful holding spot if a guest is early or if the lobby is bunched. Don't book Café seats — first-come.
+
+## Section 7 — Tier and area distinctions
+
+### 7.1 The Retreat private lagoon
+Day-visit guests, including Signature tier, do not enter the Retreat's private lagoon side. The Retreat private lagoon is for overnight Retreat suite guests only. If asked, redirect Signature guests to the spa side's private changing area, which is included in their tier.
+
+### 7.2 Signature private changing
+Signature tier includes the spa side's private changing area (not the Retreat side). Show them the door from the main locker hallway and tap their wristband to confirm access.
+
+### 7.3 Comfort and Premium
+Same lagoon access, different inclusions (mask choice, drink, robe quality). Don't gate access by tier badge alone — the wristband is the source of truth.
+
+## Section 8 — Evacuation
+
+### 8.1 Alarm response
+On the evacuation tone:
+- Lagoon lifeguards do a count-off by zone over PA: "Zone A clear", "Zone B clear", and so on.
+- Treatment-room therapists wake the guest, hand them a robe, and escort them to the assembly point — they do not finish the treatment.
+- Mask bar attendants close the station and walk guests to the outdoor courtyard.
+- Front desk staff at Silica and Retreat run their own evacuation lists.
+
+### 8.2 Assembly point
+The outdoor courtyard on the north side. Wheelchair-accessible exit is via the main lobby. Do not use the lagoon-side exits — they are designated for staff egress only.
+
+### 8.3 Headcount
+Floor manager owns the master count. Therapists report their guest count by treatment-room number. Lifeguards report by zone. Hotel front desks report by floor.
+
+## Section 9 — Allergen and medical
+
+### 9.1 Lagoon entry contraindications
+The following must be declined or routed to medical advice at the kiosk:
+- Open wounds or skin infections.
+- Recent surgery (within 4 weeks unless cleared).
+- Pregnancy advisory — water temperature exceeds recommended levels; offer alternatives or the indoor warm pool only.
+- Cardiac conditions or recent cardiac events — recommend a doctor's note.
+
+### 9.2 EpiPen and first-aid
+First-aid stations are at lifeguard zone B and at the spa entrance kiosk. Both stations stock EpiPens. Floor manager has the kiosk key.
+
+### 9.3 Restaurant allergen process
+Lava, Moss, and Spa Restaurant all run a two-step allergen check (at booking, again at the table). Spa Restaurant runs only the table-side check for walk-ins. If a guest declines to answer, log the decline and serve from the default menu.
+
+## Section 10 — Today's maintenance status
+
+Pump 2 of 4 in the silica filtration cycle is under maintenance from 12:00 to 18:00.
+
+- Outdoor lagoon capacity reduced to 70% from 15:00 to 18:00 (a 4-hour band).
+- Outdoor mask bar station is closed for the duration — all mask service runs through the indoor station.
+- 6 of 14 therapists rostered for outdoor in-water service are affected. The floor manager will hand you the current reassignment list at the briefing.
+- For current slot allocation, in-water massage swaps, or recovery-option scripts, refer the question to the duty floor manager or check with the Ops Copilot.
+
+Capacity is restored by 18:30.
 `;

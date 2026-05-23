@@ -9,20 +9,22 @@ import { TRIP_SYSTEM_PROMPT } from "@/lib/prompts/customer/trip";
 import { OPS_SYSTEM_PROMPT } from "@/lib/prompts/internal/ops";
 import { CREW_SYSTEM_PROMPT } from "@/lib/prompts/internal/crew";
 import {
-  makeSearchFlightsTool,
-  makeHoldBookingTool,
+  makeSearchExperiencesTool,
+  makeHoldReservationTool,
   makeSaveTripIdeaTool,
-  type SearchFlightsResult,
-  type HoldBookingResult,
+  type SearchExperiencesResult,
+  type HoldReservationResult,
   type SaveTripIdeaResult,
 } from "@/lib/tools/bookingTools";
 import {
   makeSearchHotelsTool,
-  makeSearchCarsTool,
+  makeSearchTransfersTool,
   makeSearchPackagesTool,
+  makeSearchAddonsTool,
   type SearchHotelsResult,
-  type SearchCarsResult,
+  type SearchTransfersResult,
   type SearchPackagesResult,
+  type SearchAddonsResult,
 } from "@/lib/tools/inventoryTools";
 
 interface IncomingMessage {
@@ -193,11 +195,12 @@ async function runPlainStream({ client, config, messages, send }: RunArgs) {
 }
 
 type AnyToolResult =
-  | SearchFlightsResult
+  | SearchExperiencesResult
   | SearchHotelsResult
-  | SearchCarsResult
+  | SearchTransfersResult
   | SearchPackagesResult
-  | HoldBookingResult
+  | SearchAddonsResult
+  | HoldReservationResult
   | SaveTripIdeaResult;
 
 async function runTripToolLoop({
@@ -209,19 +212,21 @@ async function runTripToolLoop({
   // Per-tool result queues. Tools push into their own queue via the onResult
   // callback, and we drain by tool name once the model has emitted
   // tool_use blocks for this iteration.
-  const flightQ: SearchFlightsResult[] = [];
+  const experiencesQ: SearchExperiencesResult[] = [];
   const hotelQ: SearchHotelsResult[] = [];
-  const carQ: SearchCarsResult[] = [];
+  const transferQ: SearchTransfersResult[] = [];
   const packageQ: SearchPackagesResult[] = [];
-  const holdQ: HoldBookingResult[] = [];
+  const addonQ: SearchAddonsResult[] = [];
+  const holdQ: HoldReservationResult[] = [];
   const tripIdeaQ: SaveTripIdeaResult[] = [];
 
   const tools = [
-    makeSearchFlightsTool((r) => flightQ.push(r)),
+    makeSearchExperiencesTool((r) => experiencesQ.push(r)),
     makeSearchHotelsTool((r) => hotelQ.push(r)),
-    makeSearchCarsTool((r) => carQ.push(r)),
+    makeSearchTransfersTool((r) => transferQ.push(r)),
     makeSearchPackagesTool((r) => packageQ.push(r)),
-    makeHoldBookingTool((r) => holdQ.push(r)),
+    makeSearchAddonsTool((r) => addonQ.push(r)),
+    makeHoldReservationTool((r) => holdQ.push(r)),
     makeSaveTripIdeaTool((r) => tripIdeaQ.push(r)),
   ];
 
@@ -253,15 +258,17 @@ async function runTripToolLoop({
 
   const drainByName = (name: string): AnyToolResult | undefined => {
     switch (name) {
-      case "search_flights":
-        return flightQ.shift();
+      case "search_experiences":
+        return experiencesQ.shift();
       case "search_hotels":
         return hotelQ.shift();
-      case "search_cars":
-        return carQ.shift();
+      case "search_transfers":
+        return transferQ.shift();
       case "search_packages":
         return packageQ.shift();
-      case "hold_booking":
+      case "search_addons":
+        return addonQ.shift();
+      case "hold_reservation":
         return holdQ.shift();
       case "save_trip_idea":
         return tripIdeaQ.shift();
