@@ -43,6 +43,13 @@ export function StrategyHero() {
             <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
               Jóhann Valur Sævarsson
             </dd>
+            <dd className="mt-3">
+              <img
+                src={`${BASE}/strategy/qr-code.png`}
+                alt="QR code linking to this strategy"
+                className="h-16 w-16 rounded"
+              />
+            </dd>
           </div>
           <div>
             <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
