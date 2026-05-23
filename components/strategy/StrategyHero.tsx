@@ -36,37 +36,30 @@ export function StrategyHero() {
         </p>
 
         <dl className="mt-12 grid max-w-2xl grid-cols-1 gap-4 border-t border-bluelagoon-snow/20 pt-8 sm:grid-cols-3 sm:gap-6">
-          <div>
-            <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
-              Candidate
-            </dt>
-            <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
-              Jóhann Valur Sævarsson
-            </dd>
-            <dd className="mt-3">
-              <img
-                src={`${BASE}/strategy/qr-code.png`}
-                alt="QR code linking to this strategy"
-                className="h-16 w-16 rounded"
-              />
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
-              Role
-            </dt>
-            <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
-              CCO
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
-              Dated
-            </dt>
-            <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
-              May 2026
-            </dd>
-          </div>
+            <div>
+              <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
+                Candidate
+              </dt>
+              <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
+                Jóhann Valur Sævarsson
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
+                Role
+              </dt>
+              <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
+                CCO
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
+                Dated
+              </dt>
+              <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
+                May 2026
+              </dd>
+            </div>
         </dl>
       </div>
     </section>
