@@ -5,6 +5,7 @@ interface BrandMarkProps {
 }
 
 const LOGO_RATIO = 481 / 85.79;
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export function BrandMark({
   height = 32,
@@ -14,6 +15,7 @@ export function BrandMark({
   const width = Math.round(LOGO_RATIO * height);
   const color =
     variant === "white" ? "#ffffff" : "var(--color-bluelagoon-midnight)";
+  const logoUrl = `url(${BASE}/bluelagoon-logo.svg)`;
   return (
     <span
       role="img"
@@ -23,8 +25,8 @@ export function BrandMark({
         width,
         height,
         backgroundColor: color,
-        WebkitMaskImage: "url(/bluelagoon-logo.svg)",
-        maskImage: "url(/bluelagoon-logo.svg)",
+        WebkitMaskImage: logoUrl,
+        maskImage: logoUrl,
         WebkitMaskRepeat: "no-repeat",
         maskRepeat: "no-repeat",
         WebkitMaskSize: "contain",
