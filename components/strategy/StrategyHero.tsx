@@ -40,8 +40,15 @@ export function StrategyHero() {
               <dt className="text-[12px] font-semibold uppercase tracking-[0.22em] text-bluelagoon-snow/55">
                 Candidate
               </dt>
-              <dd className="mt-2 font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
-                Jóhann Valur Sævarsson
+              <dd className="mt-2 flex items-center gap-3">
+                <img
+                  src={`${BASE}/strategy/profile.jpg`}
+                  alt="Jóhann Valur Sævarsson"
+                  className="h-10 w-10 rounded-full object-cover ring-2 ring-bluelagoon-snow/20"
+                />
+                <span className="font-loft text-base font-semibold tracking-tight text-bluelagoon-snow">
+                  Jóhann Valur Sævarsson
+                </span>
               </dd>
             </div>
             <div>
