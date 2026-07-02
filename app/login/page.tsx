@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 export default function LoginPage() {
   const { login } = useAuth();
   const [username, setUsername] = useState('');
@@ -16,7 +18,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     if (login(username, password)) {
-      window.location.href = '/strategy';
+      window.location.href = `${BASE}/strategy`;
     } else {
       setError('Invalid credentials');
       setPassword('');

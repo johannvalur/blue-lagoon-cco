@@ -24,20 +24,16 @@ const DEPARTMENTS: Department[] = [
   {
     key: "marketing",
     short: "Marketing",
-    full: "Marketing & Brand",
+    full: "Marketing",
     tagline: "Campaigns · PR · Content",
     scope:
-      "Brand architecture across Blue Lagoon, Retreat, Skin Science, Kerlingarfjöll & future properties · Campaigns & media · PR & communications · Content & storytelling · International & domestic positioning · Reputation & destination marketing.",
+      "Campaigns & media · PR & communications · Content & storytelling · International & domestic positioning · Reputation & destination marketing.",
     accountability:
-      "Ensures brand portfolio coherence as new properties and products are added.",
+      "Accountable for building awareness, reputation and demand across all markets.",
     roles: [
       {
-        title: "Head of Marketing & Brand",
-        scope: "Brand strategy, campaigns & team leadership.",
-      },
-      {
-        title: "Brand",
-        scope: "Brand & consistency across all properties.",
+        title: "Head of Marketing",
+        scope: "Marketing strategy, campaigns & team leadership.",
       },
       {
         title: "Campaign & Media",

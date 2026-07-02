@@ -21,7 +21,7 @@ const KPI_FRAMEWORK: KpiRow[] = [
     goal: "ATTRACT",
     kpi: "Direct Website Traffic",
     target: "+20% YoY",
-    division: "Marketing & Brand",
+    division: "Marketing",
     owner: "Head of Marketing",
     freq: "Weekly",
     status: "ATTENTION",
@@ -30,7 +30,7 @@ const KPI_FRAMEWORK: KpiRow[] = [
     goal: "ATTRACT",
     kpi: "Campaign ROAS",
     target: "> 4.0×",
-    division: "Marketing & Brand",
+    division: "Marketing",
     owner: "Campaign & Media Manager",
     freq: "Weekly",
     status: "ATTENTION",
@@ -43,15 +43,6 @@ const KPI_FRAMEWORK: KpiRow[] = [
     owner: "Head of Sales",
     freq: "Monthly",
     status: "ON TRACK",
-  },
-  {
-    goal: "ATTRACT",
-    kpi: "Brand Consideration",
-    target: "+5 pts YoY",
-    division: "Marketing & Brand",
-    owner: "Head of Marketing",
-    freq: "Quarterly",
-    status: "ATTENTION",
   },
   {
     goal: "CONVERT",
@@ -130,7 +121,7 @@ const KPI_FRAMEWORK: KpiRow[] = [
 type Tab = "framework" | "weekly" | "monthly" | "quarterly";
 
 const TABS: { key: Tab; label: string; subtitle: string }[] = [
-  { key: "framework", label: "Framework", subtitle: "12 KPIs across the funnel" },
+  { key: "framework", label: "Framework", subtitle: "11 KPIs across the funnel" },
   { key: "weekly", label: "Weekly", subtitle: "Speed · pace & leakage" },
   { key: "monthly", label: "Monthly", subtitle: "Accountability · margin & mix" },
   { key: "quarterly", label: "Quarterly", subtitle: "Strategic · ExCo review" },
@@ -618,16 +609,11 @@ function MonthlyView() {
 
 function QuarterlyView() {
   const trajectory = [
-    { kpi: "Brand consideration", value: "48%", status: "ATTENTION" as Status },
     { kpi: "Direct revenue share", value: "61%", status: "ATTENTION" as Status },
     { kpi: "CLV", value: "ISK 112k", status: "ATTENTION" as Status },
     { kpi: "Commercial efficiency", value: "4.8x", status: "ON TRACK" as Status },
   ];
   const questions = [
-    {
-      q: "Are we creating brand-led demand?",
-      a: "Fund brand where it improves direct demand and consideration.",
-    },
     {
       q: "Are customers becoming more valuable?",
       a: "Accelerate loyalty, lifecycle and repeat-visit economics.",
@@ -645,7 +631,6 @@ function QuarterlyView() {
     "Direct-channel growth sprint",
     "Loyalty and repeat-stay acceleration",
     "B2B pipeline development",
-    "Brand consideration investment",
   ];
   return (
     <div className="surface-fade flex flex-col gap-8">
@@ -658,8 +643,8 @@ function QuarterlyView() {
             Quarterly Strategic ExCo Review
           </h3>
           <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-bluelagoon-ink/75">
-            Brand, customer economics, channel strategy, and
-            resource-allocation choices for the next quarter.
+            Customer economics, channel strategy, and resource-allocation
+            choices for the next quarter.
           </p>
         </div>
         <p className="md:col-span-5 md:text-right text-xs text-bluelagoon-muted">
@@ -667,13 +652,7 @@ function QuarterlyView() {
         </p>
       </header>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <KpiTile
-          label="Brand consideration"
-          value="+3 pts"
-          status="ATTENTION"
-          target="Target +5 pts YoY"
-        />
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <KpiTile
           label="Customer lifetime value"
           value="ISK 112k"
@@ -763,7 +742,7 @@ function QuarterlyView() {
         <p className="font-accent text-[12px] uppercase tracking-[0.22em] text-bluelagoon-snow/65">
           Next-quarter strategic bets
         </p>
-        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {bets.map((b, i) => (
             <li
               key={b}
