@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LoginModal } from "./LoginModal";
+import { useAuth } from "@/lib/hooks/useAuth";
 
 type InsiderTier =
   | "Insider Friend"
@@ -73,6 +75,8 @@ const TIER_THEME: Record<
 };
 
 export function UserMenu() {
+  const router = useRouter();
+  const { logout: authLogout } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
@@ -151,6 +155,8 @@ export function UserMenu() {
     } catch {
       // ignore
     }
+    authLogout();
+    router.push('/login');
   }
 
   // Render a stable shell pre-hydration to avoid layout shift / mismatch.

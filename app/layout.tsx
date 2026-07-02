@@ -5,6 +5,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "./globals.css";
 import { DemoOverlay } from "@/components/DemoOverlay";
 import { Footer } from "@/components/Footer";
+import { AuthGuard } from "@/components/AuthGuard";
 
 config.autoAddCss = false;
 
@@ -34,13 +35,15 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Suspense fallback={null}>
-          <DemoOverlay />
-        </Suspense>
-        <div className="flex min-h-dvh flex-col">
-          {children}
-        </div>
-        <Footer />
+        <AuthGuard>
+          <Suspense fallback={null}>
+            <DemoOverlay />
+          </Suspense>
+          <div className="flex min-h-dvh flex-col">
+            {children}
+          </div>
+          <Footer />
+        </AuthGuard>
       </body>
     </html>
   );
